@@ -28,7 +28,8 @@
 	"custom/playerctl",
 	"custom/separator#blank_2",
 	"hyprland/window",
-	],
+  "custom/pomodoro"
+],
 
 "modules-center": [
 	"group/app_drawer",
@@ -41,7 +42,7 @@
 	"custom/weather",
 	"custom/separator#dot-line",
 	"idle_inhibitor",	
-	"custom/hint",	
+		
 	],
 
 "modules-right": [
@@ -54,7 +55,6 @@
 	"custom/separator#line",  
 	"group/audio",
 	"custom/separator#dot-line", 
-	"custom/nightlight",
 	"group/status",
 	],
 }
