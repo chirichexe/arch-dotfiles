@@ -1,6 +1,6 @@
 /* ---- 💫 https://github.com/JaKooLit 💫 ---- */
 
-// ### DEFAULT - Top ### //
+// ### DEFAULT Laptop  - Top ### //
 {
 "include": [
   "$HOME/.config/waybar/Modules",
@@ -28,7 +28,8 @@
 	"custom/playerctl",
 	"custom/separator#blank_2",
 	"hyprland/window",
-	],
+  "custom/pomodoro"
+],
 
 "modules-center": [
 	"group/app_drawer",
@@ -41,18 +42,18 @@
 	"custom/weather",
 	"custom/separator#dot-line",
 	"idle_inhibitor",	
-	"custom/hint",	
+		
 	],
 
 "modules-right": [
 	"tray",
 	"network#speed",
 	"custom/separator#dot-line",
+	"group/laptop",
+	"custom/separator#dot-line",
 	"group/mobo_drawer",
 	"custom/separator#line",  
 	"group/audio",
-	"custom/separator#dot-line", 
-	"custom/nightlight",
 	"custom/separator#dot-line", 
 	"group/status",
 	],
