@@ -1,0 +1,13 @@
+[Default Applications]
+inode/directory=thunar.desktop
+application/x-wayland-gnome-saved-search=thunar.desktop
+
+[Added Associations]
+image/png=nsxiv.desktop;
+image/jpeg=nsxiv.desktop;
+video/mp4=vlc.desktop;mpv.desktop;
+text/x-csrc=org.xfce.mousepad.desktop;
+video/x-matroska=vlc.desktop;
+text/x-go=firefox.desktop;nvim.desktop;
+video/quicktime=vlc.desktop;
+video/webm=vlc.desktop;
