@@ -1,0 +1,46 @@
+#!/usr/bin/env bash
+
+set -e
+
+CONN="Wifi Infetto da Virus 5G"
+PIHOLE_DNS="192.168.178.200"
+
+usage() {
+    echo "Usage: $0 {on|off}"
+    exit 1
+}
+
+if [[ $# -ne 1 ]]; then
+    usage
+fi
+
+case "$1" in
+    on)
+        echo "[+] Enabling Pi-hole DNS ($PIHOLE_DNS)"
+
+        # Forza l'IP del Pi-hole e ignora i DNS del DHCP
+        nmcli connection modify "$CONN" \
+            ipv4.dns "$PIHOLE_DNS" \
+            ipv4.ignore-auto-dns yes
+        ;;
+    off)
+        echo "[+] Disabling Pi-hole DNS (Fallback to Router IPv4)"
+
+        # Forza l'interrogazione del router solo su IPv4
+        nmcli connection modify "$CONN" \
+            ipv4.dns "192.168.178.1" \
+            ipv4.ignore-auto-dns yes
+        ;;
+
+    *)
+        usage
+        ;;
+esac
+
+echo "[+] Restarting connection"
+
+nmcli connection down "$CONN" || true
+nmcli connection up "$CONN"
+
+echo "[+] Current DNS configuration:"
+nmcli dev show | grep DNS
