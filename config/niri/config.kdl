@@ -321,8 +321,9 @@ binds {
     // Mod+B: Apri il browser web predefinito
     Mod+B hotkey-overlay-title="Open Browser" { spawn "xdg-open" "https://"; }
 
-    // Mod+D: Launcher applicazioni (Rofi drun)
-    Mod+D hotkey-overlay-title="App Launcher (Rofi)" { spawn-sh "pkill rofi || rofi -show drun -modi drun,filebrowser,run,window"; }
+    // Mod+D & Ctrl+D: Launcher applicazioni (Rofi drun con animazione smooth -normal-window)
+    Mod+D hotkey-overlay-title="App Launcher (Rofi)" { spawn-sh "pkill rofi || rofi -normal-window -show drun -modi drun,filebrowser,run,window"; }
+    Ctrl+D hotkey-overlay-title="App Launcher (Rofi)" { spawn-sh "pkill rofi || rofi -normal-window -show drun -modi drun,filebrowser,run,window"; }
 
     // Mod+A: Panoramica del Desktop (Overview Toggle)
     Mod+A hotkey-overlay-title="Desktop Overview" { toggle-overview; }

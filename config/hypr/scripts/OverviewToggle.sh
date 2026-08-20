@@ -4,6 +4,12 @@
 
 set -euo pipefail
 
+# 0) If Niri is running, use Niri's native workspace overview
+if pgrep -x niri >/dev/null 2>&1 || [ "${XDG_CURRENT_DESKTOP:-}" = "niri" ]; then
+  niri msg action toggle-overview
+  exit 0
+fi
+
 # 1) Try Quickshell via IPC (works if QS is running and listening)
 if pgrep -x quickshell >/dev/null 2>&1; then
   if qs ipc -c overview call overview toggle >/dev/null 2>&1; then
