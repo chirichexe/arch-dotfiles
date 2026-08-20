@@ -1,0 +1,590 @@
+// =============================================================================
+// NIRI CONFIGURATION FILE (Hyprland Parity Single Config)
+// =============================================================================
+// Questo file di configurazione unificato per Niri ricrea l'ambiente, le app
+// predefinite e tutte le scorciatoie da tastiera utilizzate in Hyprland.
+// È organizzato in un unico file separato da sezioni con commenti dettagliati.
+//
+// Formato: KDL (https://kdl.dev)
+// =============================================================================
+
+// -----------------------------------------------------------------------------
+// 1. VARIABILI D'AMBIENTE (ENVIRONMENT VARIABLES)
+// -----------------------------------------------------------------------------
+// Variabili d'ambiente importate dalle configurazioni Hyprland
+// (~/.config/hypr/configs/ENVariables.conf & 01-UserDefaults.conf)
+environment {
+    // Editor di testo predefinito
+    EDITOR "nvim"
+
+    // Versione dotfiles JakooLit
+    DOTS_VERSION "2.3.20"
+
+    // Backend Toolkit
+    GDK_BACKEND "wayland,x11,*"
+    QT_QPA_PLATFORM "wayland;xcb"
+    CLUTTER_BACKEND "wayland"
+
+    // Specifiche XDG
+    XDG_CURRENT_DESKTOP "niri"
+    XDG_SESSION_DESKTOP "niri"
+    XDG_SESSION_TYPE "wayland"
+
+    // Impostazioni QT
+    QT_AUTO_SCREEN_SCALE_FACTOR "1"
+    QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
+    QT_QPA_PLATFORMTHEME "qt6ct"
+
+    // Scalamento applicativo
+    GDK_SCALE "1"
+    QT_SCALE_FACTOR "1"
+
+    // Tema del Cursore
+    HYPRCURSOR_THEME "Bibata-Modern-Ice"
+    HYPRCURSOR_SIZE "24"
+
+    // Firefox Wayland
+    MOZ_ENABLE_WAYLAND "1"
+
+    // Electron (Wayland primario)
+    ELECTRON_OZONE_PLATFORM_HINT "auto"
+
+    // Driver GPU NVIDIA (se presenti)
+    LIBVA_DRIVER_NAME "nvidia"
+    __GLX_VENDOR_LIBRARY_NAME "nvidia"
+    NVD_BACKEND "direct"
+    GSK_RENDERER "ngl"
+}
+
+// Disabilita le barre del titolo CSD lato client per un look minimale simile ad Hyprland
+prefer-no-csd
+
+// -----------------------------------------------------------------------------
+// 2. DISPOSITIVI DI INPUT (KEYBOARD, TOUCHPAD, MOUSE)
+// -----------------------------------------------------------------------------
+input {
+    keyboard {
+        xkb {
+            // È possibile specificare il layout di tastiera e le opzioni xkb qui
+            // layout "it,us"
+            // options "grp:alt_shift_toggle"
+        }
+        numlock
+    }
+
+    touchpad {
+        tap
+        natural-scroll
+        // accel-speed 0.2
+        // accel-profile "flat"
+    }
+
+    mouse {
+        // natural-scroll
+        // accel-speed 0.2
+    }
+
+    trackpoint {
+    }
+
+    // focus-follows-mouse max-scroll-amount="0%"
+}
+
+// -----------------------------------------------------------------------------
+// 3. CONFIGURAZIONE MONITOR / OUTPUT
+// -----------------------------------------------------------------------------
+// Layout monitor (equivalente a monitor=eDP-1,preferred,auto,1 in Hyprland)
+output "eDP-1" {
+    // mode "1920x1080@120.030"
+    scale 1.0
+    transform "normal"
+    position x=0 y=0
+}
+
+// -----------------------------------------------------------------------------
+// 4. LAYOUT, MARGINI E ASPETTO VISIVO
+// -----------------------------------------------------------------------------
+layout {
+    // Margini tra le finestre in pixel logici (gaps_in / gaps_out)
+    gaps 8
+
+    center-focused-column "never"
+
+    // Larghezze preimpostate per la gestione a colonne di Niri (Mod+R)
+    preset-column-widths {
+        proportion 0.33333
+        proportion 0.5
+        proportion 0.66667
+    }
+
+    default-column-width { proportion 0.5; }
+
+    // Anello di focus (Focus Ring) attorno alla finestra attiva - stile Hyprland
+    focus-ring {
+        width 2
+        active-color "#89b4fa"
+        inactive-color "#313244"
+    }
+
+    // Bordo della finestra
+    border {
+        off
+        width 2
+        active-color "#89b4fa"
+        inactive-color "#313244"
+        urgent-color "#f38ba8"
+    }
+
+    // Ombreggiature delle finestre
+    shadow {
+        softness 20
+        spread 3
+        offset x=0 y=4
+        color "#0007"
+    }
+}
+
+// Regola globale per l'aspetto delle finestre (angoli arrotondati come Hyprland rounding = 10)
+window-rule {
+    geometry-corner-radius 10
+    clip-to-geometry true
+}
+
+// -----------------------------------------------------------------------------
+// 5. IMPOSTAZIONI DI SISTEMA & ANIMAZIONI
+// -----------------------------------------------------------------------------
+screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
+
+hotkey-overlay {
+    // skip-at-startup
+}
+
+animations {
+    // slowdown 1.0
+
+    // Cambio workspace fluido (stile Hyprland)
+    workspace-switch {
+        spring damping-ratio=0.85 stiffness=400 epsilon=0.0001
+    }
+
+    // Movimento orizzontale delle colonne/vista
+    horizontal-view-movement {
+        spring damping-ratio=0.85 stiffness=400 epsilon=0.0001
+    }
+
+    // Apertura finestre e Rofi (pop-in smooth stile Hyprland)
+    window-open {
+        spring damping-ratio=0.8 stiffness=450 epsilon=0.0001
+    }
+
+    // Chiusura finestre
+    window-close {
+        duration-ms 200
+        curve "ease-out-quad"
+    }
+
+    // Movimento finestra / scambio colonne
+    window-movement {
+        spring damping-ratio=0.8 stiffness=450 epsilon=0.0001
+    }
+
+    // Ridimensionamento finestra
+    window-resize {
+        spring damping-ratio=0.8 stiffness=450 epsilon=0.0001
+    }
+
+    // Panoramica dei workspace (Overview)
+    overview-open-close {
+        spring damping-ratio=0.85 stiffness=400 epsilon=0.0001
+    }
+
+    // Notifiche di configurazione
+    config-notification-open-close {
+        spring damping-ratio=0.85 stiffness=500 epsilon=0.0001
+    }
+
+    // UI dello screenshot
+    screenshot-ui-open {
+        duration-ms 200
+        curve "ease-out-quad"
+    }
+}
+
+// -----------------------------------------------------------------------------
+// 6. APPLICAZIONI IN AVVIO AUTOMATICO (STARTUP APPS / EXEC-ONCE)
+// -----------------------------------------------------------------------------
+// Processi e daemon avviati all'inizio della sessione (uguali a Startup_Apps.conf)
+
+// Daemon per lo sfondo (awww / swww)
+spawn-at-startup "awww-daemon" "--format" "xrgb"
+
+// Aggiornamento dell'ambiente DBus e Systemd per Wayland
+spawn-sh-at-startup "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+spawn-sh-at-startup "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
+
+// Terminale a discesa (Dropterminal background)
+spawn-sh-at-startup "$HOME/.config/hypr/scripts/Dropterminal.sh kitty"
+
+// Polkit Authentication Agent
+spawn-sh-at-startup "$HOME/.config/hypr/scripts/Polkit.sh"
+
+// Applet di rete NetworkManager
+spawn-at-startup "nm-applet" "--indicator"
+
+// Daemon per le notifiche (SwayNC)
+spawn-at-startup "swaync"
+
+// Barra di stato (Waybar)
+spawn-at-startup "waybar"
+
+// Quickshell Overview (Disattivato per usare l'overview nativa di Niri ed evitare l'hot corner del mouse in alto a sinistra)
+// spawn-sh-at-startup "qs -c overview"
+
+// Management per inattività e blocco schermo (Hypridle)
+spawn-at-startup "hypridle"
+
+// Inizializzazione gestione luce notturna (Hyprsunset)
+spawn-sh-at-startup "$HOME/.config/hypr/scripts/Hyprsunset.sh init"
+
+// Gestore appunti (Cliphist)
+spawn-sh-at-startup "wl-paste --type text --watch cliphist store"
+spawn-sh-at-startup "wl-paste --type image --watch cliphist store"
+
+// Applet Bluetooth
+spawn-at-startup "blueman-applet"
+
+// Inizializzazione Layout Tastiera
+spawn-sh-at-startup "$HOME/.config/hypr/scripts/KeybindsLayoutInit.sh"
+
+// -----------------------------------------------------------------------------
+// 7. REGOLE PER LE FINESTRE (WINDOW RULES)
+// -----------------------------------------------------------------------------
+// Regole per le finestre (sovrapposte o fluttuanti) trasposte da WindowRules.conf
+
+// Workaround Wezterm
+window-rule {
+    match app-id=r#"^org\.wezfurlong\.wezterm$"#
+    default-column-width {}
+}
+
+// Firefox Picture-in-Picture -> Fluttuante
+window-rule {
+    match app-id=r#"firefox$"# title="^Picture-in-Picture$"
+    open-floating true
+}
+
+// Pannelli di controllo, impostazioni e utilità -> Aperte in modalità fluttuante (Floating)
+window-rule {
+    match app-id=r#"^(pavucontrol|org\.pulseaudio\.pavucontrol|com\.saivert\.pwvucontrol)$"#
+    match app-id=r#"^(blueman-manager|nm-connection-editor|nm-applet)$"#
+    match app-id=r#"^(nwg-look|nwg-displays|qt5ct|qt6ct|Kvantum Manager)$"#
+    match app-id=r#"^(file-roller|org\.gnome\.FileRoller|gnome-disks|baobab|org\.gnome\.Baobab)$"#
+    match app-id=r#"^(wihotspot|wihotspot-gui)$"#
+    match app-id=r#"^(org\.kde\.polkit-kde-authentication-agent-1)$"#
+    match title=r#"^(ROG Control|KooL Quick Cheat Sheet|KooL Hyprland Settings)$"#
+    open-floating true
+}
+
+// Player Multimediali -> Fluttuanti
+window-rule {
+    match app-id=r#"^(mpv|vlc)$"#
+    open-floating true
+}
+
+// -----------------------------------------------------------------------------
+// 8. SCORCIATOIE DA TASTIERA (KEYBINDINGS & SHORTCUTS)
+// -----------------------------------------------------------------------------
+// Tutte le scorciatoie di Hyprland mappate con la sintassi nativa di Niri
+binds {
+
+    // === TASTO WIN (SUPER) DA SOLO -> OVERVIEW WORKSPACE ===
+    Super_L repeat=false { toggle-overview; }
+    Super_R repeat=false { toggle-overview; }
+
+    // === APPLICAZIONI PRINCIPALI (STANDARD APPS) ===
+    // Mod+Return: Apri il terminale predefinito (kitty)
+    Mod+Return hotkey-overlay-title="Open Terminal (kitty)" { spawn "kitty"; }
+
+    // Mod+E: Apri il gestore file predefinito (thunar)
+    Mod+E hotkey-overlay-title="Open File Manager (thunar)" { spawn "thunar"; }
+
+    // Mod+B: Apri il browser web predefinito
+    Mod+B hotkey-overlay-title="Open Browser" { spawn "xdg-open" "https://"; }
+
+    // Mod+D: Launcher applicazioni (Rofi drun)
+    Mod+D hotkey-overlay-title="App Launcher (Rofi)" { spawn-sh "pkill rofi || rofi -show drun -modi drun,filebrowser,run,window"; }
+
+    // Mod+A: Panoramica del Desktop (Overview Toggle)
+    Mod+A hotkey-overlay-title="Desktop Overview" { toggle-overview; }
+
+    // Mod+Shift+Return: Terminale a discesa (Dropterminal kitty)
+    Mod+Shift+Return hotkey-overlay-title="Dropdown Terminal" { spawn-sh "$HOME/.config/hypr/scripts/Dropterminal.sh kitty"; }
+
+
+    // === UTILITY, TEMI E SCRIPT UTENTE ===
+    // Mod+T: Cambio tema globale (Wallust / ThemeChanger)
+    Mod+T hotkey-overlay-title="Global Theme Switcher" { spawn-sh "$HOME/.config/hypr/scripts/ThemeChanger.sh"; }
+
+    // Mod+H: Aiuto / Cheat sheet scorciatoie
+    Mod+H hotkey-overlay-title="Help / Key Hints" { spawn-sh "$HOME/.config/hypr/scripts/KeyHints.sh"; }
+
+    // Mod+Alt+R: Ricarica Waybar e menu
+    Mod+Alt+R hotkey-overlay-title="Refresh Bar & Menus" { spawn-sh "$HOME/.config/hypr/scripts/Refresh.sh"; }
+
+    // Mod+Alt+E: Menu Emoji (RofiEmoji)
+    Mod+Alt+E hotkey-overlay-title="Emoji Menu" { spawn-sh "$HOME/.config/hypr/scripts/RofiEmoji.sh"; }
+
+    // Mod+S: Ricerca Web (RofiSearch)
+    Mod+S hotkey-overlay-title="Web Search" { spawn-sh "$HOME/.config/hypr/scripts/RofiSearch.sh"; }
+
+    // Mod+Ctrl+S: Selettore finestre (Rofi Window Switcher)
+    Mod+Ctrl+S hotkey-overlay-title="Window Switcher" { spawn-sh "rofi -show window"; }
+
+    // Mod+Alt+O: Attiva/Disattiva sfocatura (Blur)
+    Mod+Alt+O hotkey-overlay-title="Toggle Blur" { spawn-sh "$HOME/.config/hypr/scripts/ChangeBlur.sh"; }
+
+    // Mod+Shift+G: Modalità Gioco (GameMode)
+    Mod+Shift+G hotkey-overlay-title="Toggle Game Mode" { spawn-sh "$HOME/.config/hypr/scripts/GameMode.sh"; }
+
+    // Mod+Alt+V: Gestore appunti (ClipManager)
+    Mod+Alt+V hotkey-overlay-title="Clipboard Manager" { spawn-sh "$HOME/.config/hypr/scripts/ClipManager.sh"; }
+
+    // Mod+Ctrl+R: Selettore temi Rofi
+    Mod+Ctrl+R hotkey-overlay-title="Rofi Theme Selector" { spawn-sh "$HOME/.config/hypr/scripts/RofiThemeSelector.sh"; }
+
+    // Mod+Ctrl+Shift+R: Selettore temi Rofi (Modificato)
+    Mod+Ctrl+Shift+R hotkey-overlay-title="Rofi Theme Selector (Modified)" { spawn-sh "pkill rofi || true && $HOME/.config/hypr/scripts/RofiThemeSelector-modified.sh"; }
+
+    // Mod+Ctrl+Alt+B: Mostra/Nascondi Waybar
+    Mod+Ctrl+Alt+B hotkey-overlay-title="Toggle Waybar" { spawn-sh "pkill -SIGUSR1 waybar"; }
+
+    // Mod+Ctrl+B: Menu stili Waybar
+    Mod+Ctrl+B hotkey-overlay-title="Waybar Styles Menu" { spawn-sh "$HOME/.config/hypr/scripts/WaybarStyles.sh"; }
+
+    // Mod+Alt+B: Menu layout Waybar
+    Mod+Alt+B hotkey-overlay-title="Waybar Layout Menu" { spawn-sh "$HOME/.config/hypr/scripts/WaybarLayout.sh"; }
+
+    // Mod+N: Attiva/Disattiva luce notturna (Hyprsunset)
+    Mod+N hotkey-overlay-title="Toggle Night Light" { spawn-sh "$HOME/.config/hypr/scripts/Hyprsunset.sh toggle"; }
+
+    // Mod+Shift+M: Musica Online (RofiBeats)
+    Mod+Shift+M hotkey-overlay-title="Online Music (RofiBeats)" { spawn-sh "$HOME/.config/hypr/UserScripts/RofiBeats.sh"; }
+
+    // Mod+W: Selettore Sfondi (WallpaperSelect)
+    Mod+W hotkey-overlay-title="Select Wallpaper" { spawn-sh "$HOME/.config/hypr/UserScripts/WallpaperSelect.sh"; }
+
+    // Mod+Shift+W: Effetti Sfondo (WallpaperEffects)
+    Mod+Shift+W hotkey-overlay-title="Wallpaper Effects" { spawn-sh "$HOME/.config/hypr/UserScripts/WallpaperEffects.sh"; }
+
+    // Ctrl+Alt+W: Sfondo Casuale (WallpaperRandom)
+    Ctrl+Alt+W hotkey-overlay-title="Random Wallpaper" { spawn-sh "$HOME/.config/hypr/UserScripts/WallpaperRandom.sh"; }
+
+    // Mod+Shift+K: Cerca scorciatoie (KeyBinds)
+    Mod+Shift+K hotkey-overlay-title="Search Keybinds" { spawn-sh "$HOME/.config/hypr/scripts/KeyBinds.sh"; }
+
+    // Mod+Shift+A: Menu Animazioni
+    Mod+Shift+A hotkey-overlay-title="Animations Menu" { spawn-sh "$HOME/.config/hypr/scripts/Animations.sh"; }
+
+    // Mod+Shift+O: Cambia tema Zsh
+    Mod+Shift+O hotkey-overlay-title="Change Zsh Theme" { spawn-sh "$HOME/.config/hypr/UserScripts/ZshChangeTheme.sh"; }
+
+    // Mod+Alt+K: Cambia layout tastiera
+    Mod+Alt+K hotkey-overlay-title="Switch Keyboard Layout" { spawn-sh "$HOME/.config/hypr/scripts/KeyboardLayout.sh switch"; }
+
+    // Mod+Alt+C: Calcolatrice Rofi
+    Mod+Alt+C hotkey-overlay-title="Calculator" { spawn-sh "$HOME/.config/hypr/UserScripts/RofiCalc.sh"; }
+
+
+    // === GESTIONE SESSIONE E SISTEMA ===
+    // Mod+Q: Chiudi la finestra attiva
+    Mod+Q repeat=false hotkey-overlay-title="Close Active Window" { close-window; }
+
+    // Mod+Shift+Q: Termina il processo attivo
+    Mod+Shift+Q hotkey-overlay-title="Kill Active Process" { spawn-sh "$HOME/.config/hypr/scripts/KillActiveProcess.sh"; }
+
+    // Ctrl+Alt+L: Blocca lo schermo (LockScreen)
+    Ctrl+Alt+L hotkey-overlay-title="Lock Screen" { spawn-sh "$HOME/.config/hypr/scripts/LockScreen.sh"; }
+
+    // Ctrl+Alt+P: Menu Spegnimento / Power Menu (Wlogout)
+    Ctrl+Alt+P hotkey-overlay-title="Power Menu" { spawn-sh "$HOME/.config/hypr/scripts/Wlogout.sh"; }
+
+    // Mod+Shift+N: Centro Notifiche (SwayNC)
+    Mod+Shift+N hotkey-overlay-title="Notification Center" { spawn-sh "swaync-client -t -sw"; }
+
+    // Mod+Shift+E: Menu Impostazioni Rapide (KooL Quick Settings)
+    Mod+Shift+E hotkey-overlay-title="Quick Settings Menu" { spawn-sh "$HOME/.config/hypr/scripts/Kool_Quick_Settings.sh"; }
+
+    // Ctrl+Alt+Delete: Esci da Niri
+    Ctrl+Alt+Delete hotkey-overlay-title="Quit Niri" { quit; }
+
+    // Mod+Escape: Sblocco scorciatoie se un'app blocca la tastiera
+    Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
+
+
+    // === CATTURA SCHERMO (SCREENSHOTS) ===
+    // Stamp / Mod+Stamp: Screenshot Immediato
+    Print { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --now"; }
+    Mod+Print hotkey-overlay-title="Screenshot Now" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --now"; }
+
+    // Mod+Shift+Stamp: Screenshot Area
+    Mod+Shift+Print hotkey-overlay-title="Screenshot Area" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --area"; }
+
+    // Mod+Ctrl+Stamp: Screenshot ritardato 5 secondi
+    Mod+Ctrl+Print hotkey-overlay-title="Screenshot (5s Delay)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --in5"; }
+
+    // Mod+Ctrl+Shift+Stamp: Screenshot ritardato 10 secondi
+    Mod+Ctrl+Shift+Print hotkey-overlay-title="Screenshot (10s Delay)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --in10"; }
+
+    // Alt+Stamp: Screenshot Finestra Attiva
+    Alt+Print hotkey-overlay-title="Screenshot Active Window" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --active"; }
+
+    // Mod+Shift+S: Screenshot con Swappy
+    Mod+Shift+S hotkey-overlay-title="Screenshot (Swappy)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --swappy"; }
+
+    // Tasti Laptop F6 per Screenshot
+    Mod+F6 hotkey-overlay-title="Screenshot Now (F6)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --now"; }
+    Mod+Shift+F6 hotkey-overlay-title="Screenshot Area (F6)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --area"; }
+    Mod+Ctrl+F6 hotkey-overlay-title="Screenshot 5s Delay (F6)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --in5"; }
+    Mod+Alt+F6 hotkey-overlay-title="Screenshot 10s Delay (F6)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --in10"; }
+    Alt+F6 hotkey-overlay-title="Screenshot Active Window (F6)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --active"; }
+
+
+    // === CONTROLLI MULTIMEDIALI ED HARDWARE ===
+    // Controllo Volume Audio
+    XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Volume.sh --inc"; }
+    XF86AudioLowerVolume allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Volume.sh --dec"; }
+    Alt+XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Volume.sh --inc-precise"; }
+    Alt+XF86AudioLowerVolume allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Volume.sh --dec-precise"; }
+    XF86AudioMicMute allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Volume.sh --toggle-mic"; }
+    XF86AudioMute allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Volume.sh --toggle"; }
+
+    // Sospensione e Modalità Aereo
+    XF86Sleep allow-when-locked=true { spawn "systemctl" "suspend"; }
+    XF86Rfkill allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/AirplaneMode.sh"; }
+
+    // Controlli Riproduzione Media
+    XF86AudioPlay allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/MediaCtrl.sh --pause"; }
+    XF86AudioPause allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/MediaCtrl.sh --pause"; }
+    XF86AudioNext allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/MediaCtrl.sh --nxt"; }
+    XF86AudioPrev allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/MediaCtrl.sh --prv"; }
+    XF86AudioStop allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/MediaCtrl.sh --stop"; }
+
+    // Luminosità Schermo e Tastiera
+    XF86MonBrightnessUp allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Brightness.sh --inc"; }
+    XF86MonBrightnessDown allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Brightness.sh --dec"; }
+    XF86KbdBrightnessUp allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/BrightnessKbd.sh --inc"; }
+    XF86KbdBrightnessDown allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/BrightnessKbd.sh --dec"; }
+
+    // Tasti Speciali Asus / Laptop
+    XF86Launch1 { spawn "rog-control-center"; }
+    XF86Launch3 { spawn "asusctl" "led-mode" "-n"; }
+    XF86Launch4 { spawn "asusctl" "profile" "-n"; }
+    XF86TouchpadToggle { spawn-sh "$HOME/.config/hypr/scripts/TouchPad.sh"; }
+
+
+    // === NAVIGAZIONE FINESTRE E COLONNE (NIRI NATIVE) ===
+    // Spostamento del Focus (Frecce & Tasti Vim J/K/L)
+    Mod+Left  { focus-column-left; }
+    Mod+Right { focus-column-right; }
+    Mod+Up    { focus-window-up; }
+    Mod+Down  { focus-window-down; }
+    Mod+J     { focus-window-down; }
+    Mod+K     { focus-window-up; }
+    Mod+L     { focus-column-right; }
+
+    // Spostamento Finestra / Colonna
+    Mod+Ctrl+Left  { move-column-left; }
+    Mod+Ctrl+Right { move-column-right; }
+    Mod+Ctrl+Up    { move-window-up; }
+    Mod+Ctrl+Down  { move-window-down; }
+    Mod+Ctrl+J     { move-window-down; }
+    Mod+Ctrl+K     { move-window-up; }
+    Mod+Ctrl+L     { move-column-right; }
+
+    // Scambio Finestre / Colonne
+    Mod+Alt+Left  { move-column-left; }
+    Mod+Alt+Right { move-column-right; }
+    Mod+Alt+Up    { move-window-up; }
+    Mod+Alt+Down  { move-window-down; }
+
+    // Unione ed Espulsione Finestre in Colonne
+    Mod+BracketLeft  { consume-or-expel-window-left; }
+    Mod+BracketRight { consume-or-expel-window-right; }
+    Mod+Comma        { consume-window-into-column; }
+    Mod+Period       { expel-window-from-column; }
+
+    // Dimensionamento Colonne e Preset
+    Mod+R            { switch-preset-column-width; }
+
+    // Ridimensionamento Attivo (Mod + Shift + Frecce)
+    Mod+Shift+Left  { set-column-width "-50"; }
+    Mod+Shift+Right { set-column-width "+50"; }
+    Mod+Shift+Up    { set-window-height "-50"; }
+    Mod+Shift+Down  { set-window-height "+50"; }
+
+    // Schermo Intero, Massimizzazione e Modalità Fluttuante
+    Mod+Shift+F { fullscreen-window; }
+    Mod+Ctrl+F  { maximize-column; }
+    Mod+M       { maximize-window-to-edges; }
+    Mod+SPACE   { toggle-window-floating; }
+    Mod+V       { toggle-window-floating; }
+    Mod+Shift+V { switch-focus-between-floating-and-tiling; }
+    Mod+C       { center-column; }
+    Mod+Ctrl+C  { center-visible-columns; }
+
+    // Panoramica (Overview) Niri
+    Mod+O repeat=false { toggle-overview; }
+
+    // Mostra Overlay Scorciatoie
+    Mod+Shift+Slash { show-hotkey-overlay; }
+
+
+    // === GESTIONE AREA DI LAVORO (WORKSPACES) ===
+    // Selezione Workspace (Mod + 1..9, 0)
+    Mod+1 { focus-workspace 1; }
+    Mod+2 { focus-workspace 2; }
+    Mod+3 { focus-workspace 3; }
+    Mod+4 { focus-workspace 4; }
+    Mod+5 { focus-workspace 5; }
+    Mod+6 { focus-workspace 6; }
+    Mod+7 { focus-workspace 7; }
+    Mod+8 { focus-workspace 8; }
+    Mod+9 { focus-workspace 9; }
+    Mod+0 { focus-workspace 10; }
+
+    // Sposta Finestra/Colonna su Workspace (Mod + Shift + 1..9, 0)
+    Mod+Shift+1 { move-column-to-workspace 1; }
+    Mod+Shift+2 { move-column-to-workspace 2; }
+    Mod+Shift+3 { move-column-to-workspace 3; }
+    Mod+Shift+4 { move-column-to-workspace 4; }
+    Mod+Shift+5 { move-column-to-workspace 5; }
+    Mod+Shift+6 { move-column-to-workspace 6; }
+    Mod+Shift+7 { move-column-to-workspace 7; }
+    Mod+Shift+8 { move-column-to-workspace 8; }
+    Mod+Shift+9 { move-column-to-workspace 9; }
+    Mod+Shift+0 { move-column-to-workspace 10; }
+
+    // Sposta Finestra/Colonna in Silenzio su Workspace (Mod + Ctrl + 1..9, 0)
+    Mod+Ctrl+1 { move-column-to-workspace 1; }
+    Mod+Ctrl+2 { move-column-to-workspace 2; }
+    Mod+Ctrl+3 { move-column-to-workspace 3; }
+    Mod+Ctrl+4 { move-column-to-workspace 4; }
+    Mod+Ctrl+5 { move-column-to-workspace 5; }
+    Mod+Ctrl+6 { move-column-to-workspace 6; }
+    Mod+Ctrl+7 { move-column-to-workspace 7; }
+    Mod+Ctrl+8 { move-column-to-workspace 8; }
+    Mod+Ctrl+9 { move-column-to-workspace 9; }
+    Mod+Ctrl+0 { move-column-to-workspace 10; }
+
+    // Scorri tra Workspaces
+    Mod+Tab       { focus-workspace-down; }
+    Mod+Shift+Tab { focus-workspace-up; }
+    Mod+U         { focus-workspace-down; }
+    Mod+Shift+U   { move-column-to-workspace-down; }
+
+    // Scroll Mouse su Workspaces
+    Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
+    Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
+    Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
+    Mod+Ctrl+WheelScrollUp   cooldown-ms=150 { move-column-to-workspace-up; }
+}
