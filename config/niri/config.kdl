@@ -301,6 +301,12 @@ layer-rule {
     match namespace="rofi"
 }
 
+// Sfondo Wallpaper nell'Overview (Mantiene il wallpaper awww visibile nello sfondo dell'overview)
+layer-rule {
+    match namespace="^awww-daemon$"
+    place-within-backdrop true
+}
+
 // -----------------------------------------------------------------------------
 // 8. SCORCIATOIE DA TASTIERA (KEYBINDINGS & SHORTCUTS)
 // -----------------------------------------------------------------------------
