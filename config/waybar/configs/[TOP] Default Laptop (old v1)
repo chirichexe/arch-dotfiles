@@ -23,6 +23,7 @@
 
 "modules-left": [
 	"hyprland/workspaces#pacman",
+	"niri/workspaces#pacman",
 	"custom/separator#dot-line",
 	"cpu",
 	"custom/separator#dot-line", 

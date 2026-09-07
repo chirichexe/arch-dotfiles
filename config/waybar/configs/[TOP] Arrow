@@ -17,8 +17,10 @@
 	"modules-left": [
 		"hyprland/mode",
 		"hyprland/workspaces",
+	"niri/workspaces",
 		"custom/arrow10",
-		"hyprland/window"
+		"hyprland/window",
+	"niri/window"
 	],
 
 	"modules-right": [

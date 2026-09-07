@@ -182,6 +182,11 @@
 	"on-click": "hyprctl switchxkblayout $SET_KB next"
 },
 
+"niri/language": {
+	"format": "Lang: {}",
+	"format-en": "US"
+},
+
 "hyprland/submap": {
 	"format": "<span style=\"italic\">  {}</span>", // Icon: expand-arrows-alt
 	"tooltip": false,
@@ -193,6 +198,18 @@
 	"separate-outputs": true,
 	"offscreen-css": true,
 	"offscreen-css-text": "(inactive)",
+	"rewrite": {
+		"(.*) — Mozilla Firefox": " $1",
+		"(.*) - fish": "> [$1]",
+		"(.*) - zsh": "> [$1]",
+		"(.*) - $term": "> [$1]",
+	},
+},
+
+"niri/window": {
+	"format": "{}",
+	"max-length": 25,
+	"separate-outputs": true,
 	"rewrite": {
 		"(.*) — Mozilla Firefox": " $1",
 		"(.*) - fish": "> [$1]",

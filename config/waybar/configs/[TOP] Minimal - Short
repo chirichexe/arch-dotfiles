@@ -21,7 +21,8 @@
 	],
 
 "modules-center": [
-	"hyprland/workspaces#roman"
+	"hyprland/workspaces#roman",
+	"niri/workspaces#roman"
 	],
 
 "modules-right": [

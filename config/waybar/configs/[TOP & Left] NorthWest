@@ -31,7 +31,9 @@
     
 "modules-center": [
   	//"hyprland/window",
+	"niri/window",
  	"hyprland/workspaces#pacman",
+	"niri/workspaces#pacman",
 	],
     
 "modules-right": [

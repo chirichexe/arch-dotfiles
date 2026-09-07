@@ -23,6 +23,7 @@
 	"idle_inhibitor", 
 	"group/mobo_drawer",
 	"hyprland/workspaces#rw",
+	"custom/niri_workspaces#rw",
 	"tray",
 	"mpris", 
 	],
@@ -33,7 +34,8 @@
 	],
     
 "modules-right": [
-	"hyprland/window",  
+	"hyprland/window",
+	"niri/window",  
 	"battery",
  	"group/audio", 
 	"custom/power",

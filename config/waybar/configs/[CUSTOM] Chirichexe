@@ -28,6 +28,7 @@
 	"custom/playerctl",
 	"custom/separator#blank_2",
 	"hyprland/window",
+	"niri/window",
   "custom/pomodoro"
 ],
 
@@ -37,6 +38,7 @@
 	"group/notify",
 	"custom/separator#dot-line",
 	"hyprland/workspaces#rw",
+	"custom/niri_workspaces#rw",
 	"clock",
 	"custom/separator#dot-line",
 //	"custom/weather",

@@ -21,12 +21,14 @@
 
 "modules-left": [	 
 	"hyprland/workspaces",
+	"niri/workspaces",
 	"tray",
 	"mpris", 
 	],
     
 "modules-center": [
-	"hyprland/window", 
+	"hyprland/window",
+	"niri/window", 
 	],
     
 "modules-right": [

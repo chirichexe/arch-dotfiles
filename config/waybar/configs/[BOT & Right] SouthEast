@@ -32,7 +32,9 @@
     
 "modules-center": [
     //"hyprland/window",
+	"niri/window",
     "hyprland/workspaces#roman",
+	"niri/workspaces#roman",
 	],
     
 "modules-right": [

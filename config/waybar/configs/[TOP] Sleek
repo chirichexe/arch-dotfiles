@@ -20,6 +20,7 @@
 	"custom/menu",
 	"custom/separator#blank_2",
 	"hyprland/workspaces",
+	"niri/workspaces",
 	"custom/separator#blank_2",
 	"mpris",
 	"tray"
@@ -35,6 +36,7 @@
 		
 "modules-right": [
 	"hyprland/window",
+	"niri/window",
 	"custom/separator#blank_2",
 	"pulseaudio",
 	"custom/separator#blank",

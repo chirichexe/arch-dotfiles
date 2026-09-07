@@ -28,13 +28,15 @@
 	
 "modules-left": [
 	"hyprland/workspaces#cam",
+	"niri/workspaces#cam",
 	"custom/separator#line",
 	"mpris",
 	"group/notify",
 	"tray", 
 	"wlr/taskbar"],
 
-"modules-center": ["hyprland/window"], 
+"modules-center": ["hyprland/window",
+	"niri/window"], 
 	
 "modules-right": [
 	"custom/backlight",

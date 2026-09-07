@@ -26,6 +26,7 @@
 	"custom/menu",
 	"custom/separator#blank_2", 
 	"hyprland/workspaces#pacman",
+	"niri/workspaces#pacman",
 	"custom/separator#blank_2",
 	"mpris",
 	"group/notify",

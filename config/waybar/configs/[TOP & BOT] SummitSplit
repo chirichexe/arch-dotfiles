@@ -76,11 +76,13 @@
 	 ],
 
 "modules-center": [
-	"hyprland/workspaces#rw", 
+	"hyprland/workspaces#rw",
+	"custom/niri_workspaces#rw", 
 	],
 
 "modules-right": [
 	"hyprland/window",
+	"niri/window",
 	"tray",
 	"group/notify",
 	"mpris",

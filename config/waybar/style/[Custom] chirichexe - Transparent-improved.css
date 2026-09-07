@@ -91,6 +91,13 @@ tooltip {
     transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
 }
 
+#custom-niri_workspaces-rw {
+    background-color: transparent;
+    padding: 0px;
+    margin: 3px 2px;
+    border: none;
+}
+
 #workspaces button.focused {
     color: #d8dee9;
 }
