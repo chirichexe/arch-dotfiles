@@ -36,7 +36,7 @@
 	"group/app_drawer",
 	"custom/separator#dot-line",
 	"hyprland/workspaces#rw",
-	"custom/niri_workspaces#rw",
+	"group/niri_workspaces",
 	"custom/separator#dot-line",
 	"group/notify",	
 	],

@@ -12,8 +12,8 @@
 	"format": "{icon}",
 	"show-special": false,
 	"on-click": "activate",
-	"on-scroll-up": "hyprctl dispatch workspace e+1",
-	"on-scroll-down": "hyprctl dispatch workspace e-1",
+	"on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'",
+	"on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'",
     "persistent-workspaces": {
       "*": 5
 	},
@@ -29,8 +29,8 @@
 	"format": "{icon}",
 	"show-special": false,
 	"on-click": "activate",
-	"on-scroll-up": "hyprctl dispatch workspace e+1",
-	"on-scroll-down": "hyprctl dispatch workspace e-1",
+	"on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'",
+	"on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'",
     "persistent-workspaces": {
       "*": 5
 	},
@@ -53,8 +53,8 @@
 	"all-outputs": true,
 	"format": "{icon}",
 	"on-click": "activate",
-	"on-scroll-up": "hyprctl dispatch workspace e+1",
-	"on-scroll-down": "hyprctl dispatch workspace e-1",
+	"on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'",
+	"on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'",
 	"show-special": false,
     "persistent-workspaces": {
       "*": 5
@@ -95,8 +95,8 @@
 	"format": "{icon}",
 	"show-special": false,
 	"on-click": "activate",
-	"on-scroll-up": "hyprctl dispatch workspace e+1",
-	"on-scroll-down": "hyprctl dispatch workspace e-1",
+	"on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'",
+	"on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'",
     "persistent-workspaces": {
       "*": 5
 	},
@@ -121,8 +121,8 @@
 	//"format": " {icon} ",
 	"show-special": false,
 	"on-click": "activate",
-	"on-scroll-up": "hyprctl dispatch workspace e+1",
-	"on-scroll-down": "hyprctl dispatch workspace e-1",
+	"on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'",
+	"on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'",
 	"all-outputs": true,
 	"sort-by-number": true,
 	"format-icons": {
@@ -147,8 +147,8 @@
 	"format": "{icon}",
 	"show-special": false,
 	"on-click": "activate",
-	"on-scroll-up": "hyprctl dispatch workspace e+1",
-	"on-scroll-down": "hyprctl dispatch workspace e-1",
+	"on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'",
+	"on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'",
     "persistent-workspaces": {
       "*": 5
 	},
@@ -173,8 +173,8 @@
 	"sort-by-number": true,
 	"show-special": false,
 	"on-click": "activate",
-	"on-scroll-up": "hyprctl dispatch workspace e+1",
-	"on-scroll-down": "hyprctl dispatch workspace e-1",
+	"on-scroll-up": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e+1\" })'",
+	"on-scroll-down": "hyprctl dispatch 'hl.dsp.focus({ workspace = \"e-1\" })'",
 	"persistent-workspaces": {
 		"*": 5
 	  },
@@ -402,10 +402,119 @@
 	"on-scroll-up": "niri msg action focus-workspace-up",
 	"on-scroll-down": "niri msg action focus-workspace-down"
 },
+// Niri equivalent of "hyprland/workspaces#rw": one module per workspace slot so each gets the
+// same pill styling as Hyprland's buttons (see .niri-ws in the style). NiriWorkspaces.py keeps
+// the slot files up to date and refreshes them with SIGRTMIN+8.
+"group/niri_workspaces": {
+	"orientation": "inherit",
+	"modules": [
+		"custom/niri_workspaces#rw",
+		"custom/niri_ws#1", "custom/niri_ws#2", "custom/niri_ws#3", "custom/niri_ws#4", "custom/niri_ws#5",
+		"custom/niri_ws#6", "custom/niri_ws#7", "custom/niri_ws#8", "custom/niri_ws#9", "custom/niri_ws#10"
+	]
+},
 "custom/niri_workspaces#rw": {
 	"exec": "$HOME/.config/hypr/scripts/NiriWorkspaces.py",
 	"return-type": "json",
+	"format": "{}"
+},
+"custom/niri_ws#1": {
+	"exec": "[ -n \"$NIRI_SOCKET\" ] && cat \"$XDG_RUNTIME_DIR/waybar-niri-ws/1.json\" 2>/dev/null",
+	"return-type": "json",
+	"signal": 8,
+	"interval": "once",
 	"format": "{}",
+	"on-click": "niri msg action focus-workspace 1",
+	"on-scroll-up": "niri msg action focus-workspace-up",
+	"on-scroll-down": "niri msg action focus-workspace-down"
+},
+"custom/niri_ws#2": {
+	"exec": "[ -n \"$NIRI_SOCKET\" ] && cat \"$XDG_RUNTIME_DIR/waybar-niri-ws/2.json\" 2>/dev/null",
+	"return-type": "json",
+	"signal": 8,
+	"interval": "once",
+	"format": "{}",
+	"on-click": "niri msg action focus-workspace 2",
+	"on-scroll-up": "niri msg action focus-workspace-up",
+	"on-scroll-down": "niri msg action focus-workspace-down"
+},
+"custom/niri_ws#3": {
+	"exec": "[ -n \"$NIRI_SOCKET\" ] && cat \"$XDG_RUNTIME_DIR/waybar-niri-ws/3.json\" 2>/dev/null",
+	"return-type": "json",
+	"signal": 8,
+	"interval": "once",
+	"format": "{}",
+	"on-click": "niri msg action focus-workspace 3",
+	"on-scroll-up": "niri msg action focus-workspace-up",
+	"on-scroll-down": "niri msg action focus-workspace-down"
+},
+"custom/niri_ws#4": {
+	"exec": "[ -n \"$NIRI_SOCKET\" ] && cat \"$XDG_RUNTIME_DIR/waybar-niri-ws/4.json\" 2>/dev/null",
+	"return-type": "json",
+	"signal": 8,
+	"interval": "once",
+	"format": "{}",
+	"on-click": "niri msg action focus-workspace 4",
+	"on-scroll-up": "niri msg action focus-workspace-up",
+	"on-scroll-down": "niri msg action focus-workspace-down"
+},
+"custom/niri_ws#5": {
+	"exec": "[ -n \"$NIRI_SOCKET\" ] && cat \"$XDG_RUNTIME_DIR/waybar-niri-ws/5.json\" 2>/dev/null",
+	"return-type": "json",
+	"signal": 8,
+	"interval": "once",
+	"format": "{}",
+	"on-click": "niri msg action focus-workspace 5",
+	"on-scroll-up": "niri msg action focus-workspace-up",
+	"on-scroll-down": "niri msg action focus-workspace-down"
+},
+"custom/niri_ws#6": {
+	"exec": "[ -n \"$NIRI_SOCKET\" ] && cat \"$XDG_RUNTIME_DIR/waybar-niri-ws/6.json\" 2>/dev/null",
+	"return-type": "json",
+	"signal": 8,
+	"interval": "once",
+	"format": "{}",
+	"on-click": "niri msg action focus-workspace 6",
+	"on-scroll-up": "niri msg action focus-workspace-up",
+	"on-scroll-down": "niri msg action focus-workspace-down"
+},
+"custom/niri_ws#7": {
+	"exec": "[ -n \"$NIRI_SOCKET\" ] && cat \"$XDG_RUNTIME_DIR/waybar-niri-ws/7.json\" 2>/dev/null",
+	"return-type": "json",
+	"signal": 8,
+	"interval": "once",
+	"format": "{}",
+	"on-click": "niri msg action focus-workspace 7",
+	"on-scroll-up": "niri msg action focus-workspace-up",
+	"on-scroll-down": "niri msg action focus-workspace-down"
+},
+"custom/niri_ws#8": {
+	"exec": "[ -n \"$NIRI_SOCKET\" ] && cat \"$XDG_RUNTIME_DIR/waybar-niri-ws/8.json\" 2>/dev/null",
+	"return-type": "json",
+	"signal": 8,
+	"interval": "once",
+	"format": "{}",
+	"on-click": "niri msg action focus-workspace 8",
+	"on-scroll-up": "niri msg action focus-workspace-up",
+	"on-scroll-down": "niri msg action focus-workspace-down"
+},
+"custom/niri_ws#9": {
+	"exec": "[ -n \"$NIRI_SOCKET\" ] && cat \"$XDG_RUNTIME_DIR/waybar-niri-ws/9.json\" 2>/dev/null",
+	"return-type": "json",
+	"signal": 8,
+	"interval": "once",
+	"format": "{}",
+	"on-click": "niri msg action focus-workspace 9",
+	"on-scroll-up": "niri msg action focus-workspace-up",
+	"on-scroll-down": "niri msg action focus-workspace-down"
+},
+"custom/niri_ws#10": {
+	"exec": "[ -n \"$NIRI_SOCKET\" ] && cat \"$XDG_RUNTIME_DIR/waybar-niri-ws/10.json\" 2>/dev/null",
+	"return-type": "json",
+	"signal": 8,
+	"interval": "once",
+	"format": "{}",
+	"on-click": "niri msg action focus-workspace 10",
 	"on-scroll-up": "niri msg action focus-workspace-up",
 	"on-scroll-down": "niri msg action focus-workspace-down"
 }

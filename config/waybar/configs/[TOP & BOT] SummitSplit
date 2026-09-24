@@ -77,7 +77,7 @@
 
 "modules-center": [
 	"hyprland/workspaces#rw",
-	"custom/niri_workspaces#rw", 
+	"group/niri_workspaces", 
 	],
 
 "modules-right": [

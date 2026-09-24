@@ -59,7 +59,7 @@
     "gtk-layer-shell": true,
     "reload_style_on_change": true,
     "modules-left": ["hyprland/workspaces#rw",
-	"custom/niri_workspaces#rw"],
+	"group/niri_workspaces"],
     "modules-center": ["wlr/taskbar"],
     "modules-right": ["tray", "custom/updater", "group/notify"],
   }

@@ -23,7 +23,7 @@
 	"idle_inhibitor", 
 	"group/mobo_drawer",
 	"hyprland/workspaces#rw",
-	"custom/niri_workspaces#rw",
+	"group/niri_workspaces",
 	"tray",
 	"mpris", 
 	],

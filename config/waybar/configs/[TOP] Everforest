@@ -26,7 +26,7 @@
   "custom/arch",
 	"custom/separator#blank_2", 
 	"hyprland/workspaces#rw",
-	"custom/niri_workspaces#rw",
+	"group/niri_workspaces",
 	"custom/separator#blank_2",
 //	"mpris",
 	"group/notify",

@@ -38,7 +38,7 @@
 	"group/notify",
 	"custom/separator#dot-line",
 	"hyprland/workspaces#rw",
-	"custom/niri_workspaces#rw",
+	"group/niri_workspaces",
 	"clock",
 	"custom/separator#dot-line",
 //	"custom/weather",

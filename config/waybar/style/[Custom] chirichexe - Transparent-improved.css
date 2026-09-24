@@ -91,11 +91,45 @@ tooltip {
     transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
 }
 
+/* niri: group/niri_workspaces = one custom module per workspace (NiriWorkspaces.py),
+   styled exactly like the Hyprland #workspaces buttons above */
+#niri_workspaces {
+    padding-left: 6px;
+    padding-right: 6px;
+}
+
 #custom-niri_workspaces-rw {
-    background-color: transparent;
     padding: 0px;
+    margin: 0px;
+}
+
+#waybar .niri-ws {
+    padding: 0px 8px;  /* labels lack the inner padding GTK gives Hyprland's buttons */
+    min-width: 12px;
     margin: 3px 2px;
-    border: none;
+    border-radius: 4px;
+    color: @textcolor1;
+    background-color: @workspacesbackground2;
+    transition: all 0.1s linear;
+    opacity: 0.4;
+}
+
+#waybar .niri-ws.active {
+    border-radius: 4px;
+    min-width: 30px;
+    transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
+    opacity: 1.0;
+}
+
+#waybar .niri-ws:hover {
+    color: @red;
+    border-radius: 3px;
+    opacity: 0.6;
+}
+
+#waybar .niri-ws.urgent {
+    color: #11111b;
+    border-radius: 10px;
 }
 
 #workspaces button.focused {
