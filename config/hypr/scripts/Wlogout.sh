@@ -21,36 +21,49 @@ if pgrep -x "wlogout" > /dev/null; then
     exit 0
 fi
 
-# Detect monitor resolution and scaling factor
-resolution=$(hyprctl -j monitors | jq -r '.[] | select(.focused==true) | .height / .scale' | awk -F'.' '{print $1}')
-hypr_scale=$(hyprctl -j monitors | jq -r '.[] | select(.focused==true) | .scale')
+# One row with exactly as many columns as the layout has buttons: wlogout pads an incomplete
+# row with empty boxes, so a fixed -b 6 (or 3) showed blank buttons for a 5-button layout
+layout_file="${XDG_CONFIG_HOME:-$HOME/.config}/wlogout/layout"
+btn_count=$(grep -c '"label"' "$layout_file" 2>/dev/null)
+[[ "$btn_count" =~ ^[1-9][0-9]*$ ]] || btn_count=5
+
+# Detect monitor resolution and scaling factor (Hyprland or niri)
+if [ -n "$HYPRLAND_INSTANCE_SIGNATURE" ]; then
+    resolution=$(hyprctl -j monitors | jq -r '.[] | select(.focused==true) | .height / .scale' | awk -F'.' '{print $1}')
+    hypr_scale=$(hyprctl -j monitors | jq -r '.[] | select(.focused==true) | .scale')
+elif [ -n "$NIRI_SOCKET" ]; then
+    resolution=$(niri msg -j focused-output | jq -r '.logical.height')
+    hypr_scale=$(niri msg -j focused-output | jq -r '.logical.scale')
+fi
+resolution=${resolution:-0}
+hypr_scale=${hypr_scale:-1}
 
 # Set parameters based on screen resolution and scaling factor
 if ((resolution >= 2160)); then
     T_val=$(awk "BEGIN {printf \"%.0f\", $A_2160 * 2160 * $hypr_scale / $resolution}")
     B_val=$(awk "BEGIN {printf \"%.0f\", $B_2160 * 2160 * $hypr_scale / $resolution}")
     echo "Setting parameters for resolution >= 4k"
-    wlogout --protocol layer-shell -b 6 -T $T_val -B $B_val &
+    wlogout --protocol layer-shell -b $btn_count -T $T_val -B $B_val &
 elif ((resolution >= 1600 && resolution < 2160)); then
     T_val=$(awk "BEGIN {printf \"%.0f\", $A_1600 * 1600 * $hypr_scale / $resolution}")
     B_val=$(awk "BEGIN {printf \"%.0f\", $B_1600 * 1600 * $hypr_scale / $resolution}")
     echo "Setting parameters for resolution >= 2.5k and < 4k"
-    wlogout --protocol layer-shell -b 6 -T $T_val -B $B_val &
+    wlogout --protocol layer-shell -b $btn_count -T $T_val -B $B_val &
 elif ((resolution >= 1440 && resolution < 1600)); then
     T_val=$(awk "BEGIN {printf \"%.0f\", $A_1440 * 1440 * $hypr_scale / $resolution}")
     B_val=$(awk "BEGIN {printf \"%.0f\", $B_1440 * 1440 * $hypr_scale / $resolution}")
     echo "Setting parameters for resolution >= 2k and < 2.5k"
-    wlogout --protocol layer-shell -b 6 -T $T_val -B $B_val &
+    wlogout --protocol layer-shell -b $btn_count -T $T_val -B $B_val &
 elif ((resolution >= 1080 && resolution < 1440)); then
     T_val=$(awk "BEGIN {printf \"%.0f\", $A_1080 * 1080 * $hypr_scale / $resolution}")
     B_val=$(awk "BEGIN {printf \"%.0f\", $B_1080 * 1080 * $hypr_scale / $resolution}")
     echo "Setting parameters for resolution >= 1080p and < 2k"
-    wlogout --protocol layer-shell -b 6 -T $T_val -B $B_val &
+    wlogout --protocol layer-shell -b $btn_count -T $T_val -B $B_val &
 elif ((resolution >= 720 && resolution < 1080)); then
     T_val=$(awk "BEGIN {printf \"%.0f\", $A_720 * 720 * $hypr_scale / $resolution}")
     B_val=$(awk "BEGIN {printf \"%.0f\", $B_720 * 720 * $hypr_scale / $resolution}")
     echo "Setting parameters for resolution >= 720p and < 1080p"
-    wlogout --protocol layer-shell -b 3 -T $T_val -B $B_val &
+    wlogout --protocol layer-shell -b $btn_count -T $T_val -B $B_val &
 else
     echo "Setting default parameters"
     wlogout &
