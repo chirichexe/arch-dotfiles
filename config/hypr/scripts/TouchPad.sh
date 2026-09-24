@@ -1,45 +1,44 @@
 #!/usr/bin/env bash
 # /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  ##
 # For disabling touchpad.
-# Edit the Touchpad_Device on ~/.config/hypr/UserConfigs/Laptops.conf according to your system
+# Edit Touchpad_Device in ~/.config/hypr/configs/Laptops.lua according to your system
 # use hyprctl devices to get your system touchpad device name
 # source https://github.com/hyprwm/Hyprland/discussions/4283?sort=new#discussioncomment-8648109
 
 set -euo pipefail
 
 notif="$HOME/.config/swaync/images/ja.png"
-laptops_conf="$HOME/.config/hypr/UserConfigs/Laptops.conf"
+laptops_conf="$HOME/.config/hypr/configs/Laptops.lua"
 
 touchpad_device="${TOUCHPAD_DEVICE:-}"
 if [[ -z "$touchpad_device" && -f "$laptops_conf" ]]; then
     touchpad_device="$(
-        awk -F= '/^\$Touchpad_Device/ {
-            gsub(/[[:space:]]*/, "", $1);
-            gsub(/^[[:space:]]+|[[:space:]]+$/, "", $2);
-            print $2;
-            exit
-        }' "$laptops_conf"
+        sed -nE 's/^[[:space:]]*local[[:space:]]+Touchpad_Device[[:space:]]*=[[:space:]]*"([^"]*)".*/\1/p' "$laptops_conf" | head -n1
     )"
 fi
 
 if [[ -z "$touchpad_device" ]]; then
-    notify-send -u low -i "$notif" " Touchpad" " Device name not set (check Laptops.conf)"
+    notify-send -u low -i "$notif" " Touchpad" " Device name not set (check configs/Laptops.lua)"
     exit 1
 fi
 
-touchpad_keyword="${TOUCHPAD_KEYWORD:-device:${touchpad_device}:enabled}"
+
+# Hyprland Lua config (0.55+): per-device settings are applied with hl.device()
+set_touchpad() {
+    hyprctl eval "hl.device({ name = \"${touchpad_device}\", enabled = $1 })" >/dev/null
+}
 status_file="${XDG_RUNTIME_DIR:-/tmp}/touchpad.status"
 
 enable_touchpad() {
     printf "true" >"$status_file"
     notify-send -u low -i "$notif" " Enabling" " touchpad"
-    hyprctl keyword "$touchpad_keyword" true -r
+    set_touchpad true
 }
 
 disable_touchpad() {
     printf "false" >"$status_file"
     notify-send -u low -i "$notif" " Disabling" " touchpad"
-    hyprctl keyword "$touchpad_keyword" false -r
+    set_touchpad false
 }
 
 current_state="false"

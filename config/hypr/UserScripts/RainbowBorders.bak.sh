@@ -11,18 +11,10 @@ WALLUST_COLORS=()
 
 # ---------- LOAD WALLUST COLORS ----------
 if [[ "$EFFECT_TYPE" == "wallust_random" || "$EFFECT_TYPE" == "gradient_flow" ]]; then
-    # Accept either hex (0xffRRGGBB) or rgb(r,g,b) and normalize to 0xffRRGGBB
+    # wallust writes `$colorN = rgb(RRGGBB)`; normalize to rgba(RRGGBBff)
     mapfile -t WALLUST_COLORS < <(
-        grep -E '^\$color[0-9]+' "$WALLUST_COLORS_SOURCE" | awk '
-        function hex2(s){ return (length(s)==6 ? "0xff"s : ""); }
-        function rgb2(r,g,b){ return sprintf("0xff%02x%02x%02x", r, g, b); }
-        {
-            if (match($0, /0x([0-9a-fA-F]{8})/, m)) { print "0x" m[1]; next }
-            if (match($0, /#([0-9a-fA-F]{6})/, m))  { print hex2(m[1]); next }
-            if (match($0, /rgb\(([0-9]+),[ ]*([0-9]+),[ ]*([0-9]+)\)/, m)) {
-                print rgb2(m[1], m[2], m[3]); next
-            }
-        }'
+        grep -E '^\$color[0-9]+' "$WALLUST_COLORS_SOURCE" |
+            sed -nE 's/.*rgb\(([0-9A-Fa-f]{6})\).*/rgba(\1ff)/p'
     )
 
     if (( ${#WALLUST_COLORS[@]} == 0 )); then
@@ -38,7 +30,7 @@ function wallust_random() {
 
 # ---------- RAINBOW COLORS ----------
 function random_hex() {
-    echo "0xff$(openssl rand -hex 3)"
+    echo "rgba($(openssl rand -hex 3)ff)"
 }
 
 # ---------- FLOW MODE ----------
@@ -82,8 +74,7 @@ function get_color() {
     fi
 }
 
-# border effect for ACTIVE window
-hyprctl keyword general:col.active_border $(get_color 0) $(get_color 1) $(get_color 2) $(get_color 3) $(get_color 4) $(get_color 5) $(get_color 6) $(get_color 7) $(get_color 8) $(get_color 9) 270deg
-
-# border effect for INACTIVE windows
-#hyprctl keyword general:col.inactive_border $(get_color 0) $(get_color 1) $(get_color 2) $(get_color 3) $(get_color 4) $(get_color 5) $(get_color 6) $(get_color 7) $(get_color 8) $(get_color 9) 270deg
+# border effect for ACTIVE window (Lua config: set the gradient with hyprctl eval)
+colors=()
+for i in $(seq 0 9); do colors+=("\"$(get_color "$i")\""); done
+hyprctl eval "hl.config({ general = { col = { active_border = { colors = { $(IFS=,; echo "${colors[*]}") }, angle = 270 } } } })" >/dev/null

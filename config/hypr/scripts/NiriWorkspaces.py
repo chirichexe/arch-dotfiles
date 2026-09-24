@@ -84,82 +84,85 @@ def get_window_icon(app_id, title):
 
     return " "
 
-def get_niri_data():
+# Waybar shows one custom module per workspace slot ("custom/niri_ws#1".."#10", defined in
+# ~/.config/waybar/ModulesWorkspaces) so each one is a real GTK widget styled by the same CSS as
+# Hyprland's workspace buttons. This daemon writes one JSON file per slot and asks waybar to
+# re-read them with a single realtime signal.
+MAX_SLOTS = 10
+SIGNAL = 8  # "signal": 8 in the niri_ws modules -> SIGRTMIN+8
+STATE_DIR = os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "waybar-niri-ws")
+
+
+def niri_json(*args):
+    out = subprocess.check_output(["niri", "msg", "--json", *args], stderr=subprocess.DEVNULL)
+    return json.loads(out)
+
+
+def slot_states():
+    """Workspaces of the focused output, keyed by their 1-based index on that output."""
     try:
-        ws_out = subprocess.check_output(["niri", "msg", "--json", "workspaces"], stderr=subprocess.DEVNULL).decode()
-        win_out = subprocess.check_output(["niri", "msg", "--json", "windows"], stderr=subprocess.DEVNULL).decode()
-        return json.loads(ws_out), json.loads(win_out)
+        workspaces, windows = niri_json("workspaces"), niri_json("windows")
     except Exception:
-        return [], []
+        return {}
 
-def generate_output():
-    workspaces, windows = get_niri_data()
-    if not workspaces:
-        return {"text": "", "tooltip": ""}
+    focused = next((w for w in workspaces if w.get("is_focused")), None)
+    output = focused.get("output") if focused else None
 
-    ws_windows = {}
+    per_ws = {}
     for w in windows:
-        ws_id = w.get("workspace_id")
-        if ws_id:
-            ws_windows.setdefault(ws_id, []).append(w)
+        if w.get("workspace_id") is not None:
+            per_ws.setdefault(w["workspace_id"], []).append(w)
 
-    workspaces.sort(key=lambda x: x.get("idx", 0))
-
-    items = []
-    tooltip_items = []
-    active_idx = 1
-
+    states = {}
     for ws in workspaces:
-        idx = ws["idx"]
-        is_active = ws.get("is_active", False)
-        is_focused = ws.get("is_focused", False)
-        if is_focused or is_active:
-            active_idx = idx
+        if output and ws.get("output") != output:
+            continue
+        idx = ws.get("idx", 0)
+        if not 1 <= idx <= MAX_SLOTS:
+            continue
+        wins = per_ws.get(ws["id"], [])
+        icons = " ".join(get_window_icon(w.get("app_id"), w.get("title")) for w in wins).strip()
+        text = f"{idx} {icons}".strip()
+        classes = ["niri-ws", "active" if ws.get("is_active") else ("occupied" if wins else "empty")]
+        if ws.get("is_urgent"):
+            classes.append("urgent")
+        titles = [w.get("title") or w.get("app_id") or "Window" for w in wins]
+        states[idx] = {
+            "text": text,
+            "class": classes,
+            "tooltip": f"Workspace {idx}: " + (", ".join(titles) if titles else "Empty"),
+        }
+    return states
 
-        ws_wins = ws_windows.get(ws["id"], [])
-        win_icons = " ".join(get_window_icon(w.get("app_id"), w.get("title")) for w in ws_wins)
 
-        label = f"{idx} {win_icons}".strip() if win_icons else f"{idx}"
+def write_states():
+    os.makedirs(STATE_DIR, exist_ok=True)
+    states = slot_states()
+    for idx in range(1, MAX_SLOTS + 1):
+        data = states.get(idx, {"text": "", "class": ["niri-ws", "hidden"]})
+        tmp = os.path.join(STATE_DIR, f".{idx}.json")
+        with open(tmp, "w") as f:
+            json.dump(data, f)
+        os.replace(tmp, os.path.join(STATE_DIR, f"{idx}.json"))
+    subprocess.run(["pkill", f"-RTMIN+{SIGNAL}", "-x", "waybar"], stderr=subprocess.DEVNULL)
 
-        if is_focused or is_active:
-            items.append(f"<span background='#ffffff' foreground='#11111b'> <b>{label}</b> </span>")
-        elif not ws_wins:
-            items.append(f"<span background='#313244' foreground='#a6adc8'> {label} </span>")
-        else:
-            items.append(f"<span background='#45475a' foreground='#cdd6f4'> {label} </span>")
-
-        titles = [w.get("title") or w.get("app_id") or "Window" for w in ws_wins]
-        win_list_str = ", ".join(titles) if titles else "Empty"
-        tooltip_items.append(f"Workspace {idx}: {win_list_str}")
-
-    text_output = " ".join(items)
-    tooltip_output = "\n".join(tooltip_items)
-
-    cls = "active" if active_idx else "normal"
-    return {
-        "text": text_output,
-        "tooltip": tooltip_output,
-        "class": cls
-    }
 
 def main():
+    # This module only launches the daemon; its own output stays empty (hidden)
+    print(json.dumps({"text": ""}), flush=True)
     if not os.environ.get("NIRI_SOCKET"):
-        print(json.dumps({"text": "", "tooltip": ""}), flush=True)
         return
 
-    print(json.dumps(generate_output()), flush=True)
-
     try:
-        proc = subprocess.Popen(["niri", "msg", "--json", "event-stream"], stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
+        proc = subprocess.Popen(["niri", "msg", "--json", "event-stream"],
+                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
     except Exception:
         sys.exit(0)
 
-    while True:
-        line = proc.stdout.readline()
-        if not line:
-            break
-        output = generate_output()
-        print(json.dumps(output), flush=True)
+    write_states()
+    for _ in proc.stdout:
+        write_states()
+
 
 if __name__ == "__main__":
     main()

@@ -13,7 +13,7 @@ wallpaper_current="$HOME/.config/hypr/wallpaper_effects/.wallpaper_current"
 iDIR="$HOME/.config/swaync/images"
 iDIRi="$HOME/.config/swaync/icons"
 
-# swww transition config
+# awww transition config
 FPS=60
 TYPE="any"
 DURATION=2
@@ -46,7 +46,7 @@ rofi_override="element-icon{size:${adjusted_icon_size}%;}"
 
 # Kill existing wallpaper daemons for video
 kill_wallpaper_for_video() {
-  swww kill 2>/dev/null
+  awww kill 2>/dev/null
   pkill mpvpaper 2>/dev/null
   pkill swaybg 2>/dev/null
   pkill hyprpaper 2>/dev/null
@@ -101,26 +101,15 @@ menu() {
 
 
 modify_startup_config() {
+  # Startup_Apps.lua starts mpvpaper with this file at login when it exists, awww otherwise
   local selected_file="$1"
-  local startup_config="$HOME/.config/hypr/UserConfigs/Startup_Apps.conf"
+  local live_state="$HOME/.config/hypr/.live_wallpaper"
 
-  # Check if it's a live wallpaper (video)
-  if [[ "$selected_file" =~ \.(mp4|mkv|mov|webm)$ ]]; then
-    # For video wallpapers:
-    sed -i '/^\s*exec-once\s*=\s*swww-daemon\s*--format\s*xrgb\s*$/s/^/\#/' "$startup_config"
-    sed -i '/^\s*#\s*exec-once\s*=\s*mpvpaper\s*.*$/s/^#\s*//;' "$startup_config"
-
-    # Update the livewallpaper variable with the selected video path (using $HOME)
-    selected_file="${selected_file/#$HOME/\$HOME}" # Replace /home/user with $HOME
-    sed -i "s|^\$livewallpaper=.*|\$livewallpaper=\"$selected_file\"|" "$startup_config"
-
+  if [[ "$selected_file" =~ \.(mp4|mkv|mov|webm|MP4|MKV|MOV|WEBM)$ ]]; then
+    printf '%s\n' "$selected_file" >"$live_state"
     echo "Configured for live wallpaper (video)."
   else
-    # For image wallpapers:
-    sed -i '/^\s*#\s*exec-once\s*=\s*swww-daemon\s*--format\s*xrgb\s*$/s/^\s*#\s*//;' "$startup_config"
-
-    sed -i '/^\s*exec-once\s*=\s*mpvpaper\s*.*$/s/^/\#/' "$startup_config"
-
+    rm -f "$live_state"
     echo "Configured for static wallpaper (image)."
   fi
 }
@@ -131,8 +120,8 @@ apply_image_wallpaper() {
 
   kill_wallpaper_for_image
 
-  if ! pgrep -x "swww-daemon" >/dev/null; then
-    echo "Starting swww-daemon..."
+  if ! pgrep -x "awww-daemon" >/dev/null; then
+    echo "Starting awww-daemon..."
     awww-daemon &
   fi
 
@@ -186,7 +175,7 @@ main() {
     exit 1
   fi
 
-  # Modify the Startup_Apps.conf file based on wallpaper type
+  # Remember whether the wallpaper is a video for the next login
   modify_startup_config "$selected_file"
 
   # **CHECK FIRST** if it's a video or an image **before calling any function**

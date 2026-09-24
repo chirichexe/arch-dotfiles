@@ -2,7 +2,8 @@
 
 KooL's Hyprland-Dots
 
-1.) Suggest not to rename any files in this directory. As this is connected and being sourced from hyprland.conf in ~/.config/hypr
+1.) Suggest not to rename any files in this directory. They are loaded with require() from hyprland.lua in ~/.config/hypr
+    (Hyprland 0.55+ Lua config; the old .conf files are no longer read).
 
 2.) This directory, along with UserScripts directory will NOT be touch when running upgrade.sh
 

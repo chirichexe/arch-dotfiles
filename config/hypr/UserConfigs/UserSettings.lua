@@ -1,0 +1,28 @@
+---@module 'hl'
+
+-- /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  #
+
+-- User Settings
+
+-- This is where you put your own settings as this will not be touched during update 
+
+-- if the upgrade.sh is used.
+
+hl.config({
+    input = {
+        follow_mouse = 1,
+        touchpad = {
+            disable_while_typing = false,
+        },
+        sensitivity = 0,
+        -- -1.0 - 1.0, 0 means no modification.
+    },
+})
+
+-- refer to Hyprland wiki for more info https://wiki.hyprland.org/Configuring/Variables/
+
+-- NOTE: some settings are in ~/.config/hypr/UserConfigs/UserDecorations.lua and UserAnimations.lua
+
+--
+
+-- Look on ~/.config/hypr/configs/SystemSettings.lua to know how to modify this

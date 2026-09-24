@@ -1,0 +1,5 @@
+---@module 'hl'
+
+-- /* ---- 💫 https://github.com/JaKooLit 💫 ---- */  #
+
+-- Commands and Apps to be executed at launch
