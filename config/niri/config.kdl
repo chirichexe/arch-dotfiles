@@ -515,11 +515,17 @@ binds {
     Mod+Ctrl+K     { move-window-up; }
     Mod+Ctrl+L     { move-column-right; }
 
-    // Scambio Finestre / Colonne
-    Mod+Alt+Left  { move-column-left; }
-    Mod+Alt+Right { move-column-right; }
-    Mod+Alt+Up    { move-window-up; }
-    Mod+Alt+Down  { move-window-down; }
+    // Navigazione Monitor / Schermi (Focus Schermo)
+    Mod+Alt+Left  hotkey-overlay-title="Focus Monitor Left" { focus-monitor-left; }
+    Mod+Alt+Right hotkey-overlay-title="Focus Monitor Right" { focus-monitor-right; }
+    Mod+Alt+Up    hotkey-overlay-title="Focus Monitor Up" { focus-monitor-up; }
+    Mod+Alt+Down  hotkey-overlay-title="Focus Monitor Down" { focus-monitor-down; }
+
+    // Spostamento Finestra/Colonna tra Monitor
+    Mod+Alt+Shift+Left  hotkey-overlay-title="Move Column to Monitor Left" { move-column-to-monitor-left; }
+    Mod+Alt+Shift+Right hotkey-overlay-title="Move Column to Monitor Right" { move-column-to-monitor-right; }
+    Mod+Alt+Shift+Up    hotkey-overlay-title="Move Column to Monitor Up" { move-column-to-monitor-up; }
+    Mod+Alt+Shift+Down  hotkey-overlay-title="Move Column to Monitor Down" { move-column-to-monitor-down; }
 
     // Unione ed Espulsione Finestre in Colonne
     Mod+BracketLeft  { consume-or-expel-window-left; }

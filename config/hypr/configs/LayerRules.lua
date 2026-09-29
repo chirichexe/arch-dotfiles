@@ -9,7 +9,8 @@ hl.layer_rule({
     match = { namespace = "rofi" },
     blur = true,
     ignore_alpha = 0,
-    animation = "slide",
+    xray = false, -- blur what's actually behind rofi, not the bare wallpaper
+    animation = "popin 90%", -- same style as windowsIn/windowsOut
 })
 
 hl.layer_rule({
