@@ -497,23 +497,23 @@ binds {
 
 
     // === NAVIGAZIONE FINESTRE E COLONNE (NIRI NATIVE) ===
-    // Spostamento del Focus (Frecce -> Left/Right per Colonne, Up/Down per Workspaces; Vim J/K/L per Finestre/Colonne)
-    Mod+Left  { focus-column-left; }
-    Mod+Right { focus-column-right; }
+    // Spostamento del Focus (Frecce -> Left/Right per Colonne, oltre il bordo passa al monitor adiacente; Up/Down per Workspaces; Vim J/K/L per Finestre/Colonne)
+    Mod+Left  { focus-column-or-monitor-left; }
+    Mod+Right { focus-column-or-monitor-right; }
     Mod+Up    { focus-workspace-up; }
     Mod+Down  { focus-workspace-down; }
     Mod+J     { focus-window-down; }
     Mod+K     { focus-window-up; }
-    Mod+L     { focus-column-right; }
+    Mod+L     { focus-column-or-monitor-right; }
 
     // Spostamento Finestra / Colonna
-    Mod+Ctrl+Left  { move-column-left; }
-    Mod+Ctrl+Right { move-column-right; }
+    Mod+Ctrl+Left  { move-column-left-or-to-monitor-left; }
+    Mod+Ctrl+Right { move-column-right-or-to-monitor-right; }
     Mod+Ctrl+Up    { move-window-up; }
     Mod+Ctrl+Down  { move-window-down; }
     Mod+Ctrl+J     { move-window-down; }
     Mod+Ctrl+K     { move-window-up; }
-    Mod+Ctrl+L     { move-column-right; }
+    Mod+Ctrl+L     { move-column-right-or-to-monitor-right; }
 
     // Navigazione Monitor / Schermi (Focus Schermo)
     Mod+Alt+Left  hotkey-overlay-title="Focus Monitor Left" { focus-monitor-left; }
