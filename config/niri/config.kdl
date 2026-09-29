@@ -336,8 +336,8 @@ binds {
     // Mod+A: Panoramica del Desktop (Overview Toggle)
     Mod+A hotkey-overlay-title="Desktop Overview" { toggle-overview; }
 
-    // Mod+Shift+Return: Terminale a discesa (Dropterminal kitty)
-    Mod+Shift+Return hotkey-overlay-title="Dropdown Terminal" { spawn-sh "$HOME/.config/hypr/scripts/Dropterminal.sh kitty"; }
+    // Mod+Shift+Return: Terminale sotto la finestra attiva, stessa colonna (sezione aurea 61.8/38.2)
+    Mod+Shift+Return hotkey-overlay-title="Open Terminal Below" { spawn-sh "$HOME/.config/hypr/scripts/NiriTermBelow.py kitty"; }
 
 
     // === UTILITY, TEMI E SCRIPT UTENTE ===
@@ -496,11 +496,11 @@ binds {
 
 
     // === NAVIGAZIONE FINESTRE E COLONNE (NIRI NATIVE) ===
-    // Spostamento del Focus (Frecce -> Left/Right per Colonne, oltre il bordo passa al monitor adiacente; Up/Down per Workspaces; Vim J/K/L per Finestre/Colonne)
+    // Spostamento del Focus (Frecce -> Left/Right per Colonne, oltre il bordo passa al monitor adiacente; Up/Down per Finestre nella colonna, oltre il bordo passa al Workspace; Vim J/K/L per Finestre/Colonne)
     Mod+Left  { focus-column-or-monitor-left; }
     Mod+Right { focus-column-or-monitor-right; }
-    Mod+Up    { focus-workspace-up; }
-    Mod+Down  { focus-workspace-down; }
+    Mod+Up    { focus-window-or-workspace-up; }
+    Mod+Down  { focus-window-or-workspace-down; }
     Mod+J     { focus-window-down; }
     Mod+K     { focus-window-up; }
     Mod+L     { focus-column-or-monitor-right; }
@@ -508,8 +508,8 @@ binds {
     // Spostamento Finestra / Colonna
     Mod+Ctrl+Left  { move-column-left-or-to-monitor-left; }
     Mod+Ctrl+Right { move-column-right-or-to-monitor-right; }
-    Mod+Ctrl+Up    { move-window-up; }
-    Mod+Ctrl+Down  { move-window-down; }
+    Mod+Ctrl+Up    { move-window-up-or-to-workspace-up; }
+    Mod+Ctrl+Down  { move-window-down-or-to-workspace-down; }
     Mod+Ctrl+J     { move-window-down; }
     Mod+Ctrl+K     { move-window-up; }
     Mod+Ctrl+L     { move-column-right-or-to-monitor-right; }
@@ -529,11 +529,11 @@ binds {
     // Dimensionamento Colonne e Preset
     Mod+R            { switch-preset-column-width; }
 
-    // Ridimensionamento Attivo (Mod + Shift + Frecce)
+    // Ridimensionamento Attivo (Mod + Shift + Frecce): Su/Giù spostano il bordo condiviso con la finestra vicina
     Mod+Shift+Left  { set-column-width "-50"; }
     Mod+Shift+Right { set-column-width "+50"; }
-    Mod+Shift+Up    { set-window-height "-50"; }
-    Mod+Shift+Down  { set-window-height "+50"; }
+    Mod+Shift+Up    { spawn-sh "$HOME/.config/hypr/scripts/NiriResizeHeight.py up"; }
+    Mod+Shift+Down  { spawn-sh "$HOME/.config/hypr/scripts/NiriResizeHeight.py down"; }
 
     // Schermo Intero, Massimizzazione e Modalità Fluttuante
     Mod+Shift+F { fullscreen-window; }
