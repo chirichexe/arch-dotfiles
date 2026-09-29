@@ -86,8 +86,9 @@ def get_window_icon(app_id, title):
 
 # Waybar shows one custom module per workspace slot ("custom/niri_ws#1".."#10", defined in
 # ~/.config/waybar/ModulesWorkspaces) so each one is a real GTK widget styled by the same CSS as
-# Hyprland's workspace buttons. This daemon writes one JSON file per slot and asks waybar to
-# re-read them with a single realtime signal.
+# Hyprland's workspace buttons. This daemon writes one JSON file per slot for every output
+# ($STATE_DIR/<output>/<idx>.json); each bar reads the directory of its own monitor through
+# $WAYBAR_OUTPUT_NAME. Waybar is asked to re-read them with a single realtime signal.
 MAX_SLOTS = 10
 SIGNAL = 8  # "signal": 8 in the niri_ws modules -> SIGRTMIN+8
 STATE_DIR = os.path.join(os.environ.get("XDG_RUNTIME_DIR", "/tmp"), "waybar-niri-ws")
@@ -99,14 +100,11 @@ def niri_json(*args):
 
 
 def slot_states():
-    """Workspaces of the focused output, keyed by their 1-based index on that output."""
+    """Workspaces per output, keyed by output name and then by their 1-based index on it."""
     try:
         workspaces, windows = niri_json("workspaces"), niri_json("windows")
     except Exception:
         return {}
-
-    focused = next((w for w in workspaces if w.get("is_focused")), None)
-    output = focused.get("output") if focused else None
 
     per_ws = {}
     for w in windows:
@@ -115,10 +113,9 @@ def slot_states():
 
     states = {}
     for ws in workspaces:
-        if output and ws.get("output") != output:
-            continue
+        output = ws.get("output")
         idx = ws.get("idx", 0)
-        if not 1 <= idx <= MAX_SLOTS:
+        if not output or not 1 <= idx <= MAX_SLOTS:
             continue
         wins = per_ws.get(ws["id"], [])
         icons = " ".join(get_window_icon(w.get("app_id"), w.get("title")) for w in wins).strip()
@@ -127,7 +124,7 @@ def slot_states():
         if ws.get("is_urgent"):
             classes.append("urgent")
         titles = [w.get("title") or w.get("app_id") or "Window" for w in wins]
-        states[idx] = {
+        states.setdefault(output, {})[idx] = {
             "text": text,
             "class": classes,
             "tooltip": f"Workspace {idx}: " + (", ".join(titles) if titles else "Empty"),
@@ -136,14 +133,15 @@ def slot_states():
 
 
 def write_states():
-    os.makedirs(STATE_DIR, exist_ok=True)
-    states = slot_states()
-    for idx in range(1, MAX_SLOTS + 1):
-        data = states.get(idx, {"text": "", "class": ["niri-ws", "hidden"]})
-        tmp = os.path.join(STATE_DIR, f".{idx}.json")
-        with open(tmp, "w") as f:
-            json.dump(data, f)
-        os.replace(tmp, os.path.join(STATE_DIR, f"{idx}.json"))
+    for output, slots in slot_states().items():
+        out_dir = os.path.join(STATE_DIR, output)
+        os.makedirs(out_dir, exist_ok=True)
+        for idx in range(1, MAX_SLOTS + 1):
+            data = slots.get(idx, {"text": "", "class": ["niri-ws", "hidden"]})
+            tmp = os.path.join(out_dir, f".{idx}.json")
+            with open(tmp, "w") as f:
+                json.dump(data, f)
+            os.replace(tmp, os.path.join(out_dir, f"{idx}.json"))
     subprocess.run(["pkill", f"-RTMIN+{SIGNAL}", "-x", "waybar"], stderr=subprocess.DEVNULL)
 
 
