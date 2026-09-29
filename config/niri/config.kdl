@@ -330,9 +330,8 @@ binds {
     // Mod+B: Apri il browser web predefinito
     Mod+B hotkey-overlay-title="Open Browser" { spawn "xdg-open" "https://"; }
 
-    // Mod+D & Ctrl+D: Launcher applicazioni (Rofi drun con animazione smooth -normal-window)
+    // Mod+D: Launcher applicazioni (Rofi drun con animazione smooth -normal-window)
     Mod+D hotkey-overlay-title="App Launcher (Rofi)" { spawn-sh "pkill rofi || rofi -normal-window -show drun -modi drun,filebrowser,run,window"; }
-    Ctrl+D hotkey-overlay-title="App Launcher (Rofi)" { spawn-sh "pkill rofi || rofi -normal-window -show drun -modi drun,filebrowser,run,window"; }
 
     // Mod+A: Panoramica del Desktop (Overview Toggle)
     Mod+A hotkey-overlay-title="Desktop Overview" { toggle-overview; }
@@ -515,12 +514,6 @@ binds {
     Mod+Ctrl+K     { move-window-up; }
     Mod+Ctrl+L     { move-column-right-or-to-monitor-right; }
 
-    // Navigazione Monitor / Schermi (Focus Schermo)
-    Mod+Alt+Left  hotkey-overlay-title="Focus Monitor Left" { focus-monitor-left; }
-    Mod+Alt+Right hotkey-overlay-title="Focus Monitor Right" { focus-monitor-right; }
-    Mod+Alt+Up    hotkey-overlay-title="Focus Monitor Up" { focus-monitor-up; }
-    Mod+Alt+Down  hotkey-overlay-title="Focus Monitor Down" { focus-monitor-down; }
-
     // Spostamento Finestra/Colonna tra Monitor
     Mod+Alt+Shift+Left  hotkey-overlay-title="Move Column to Monitor Left" { move-column-to-monitor-left; }
     Mod+Alt+Shift+Right hotkey-overlay-title="Move Column to Monitor Right" { move-column-to-monitor-right; }
@@ -585,16 +578,16 @@ binds {
     Mod+Shift+0 { move-column-to-workspace 10; }
 
     // Sposta Finestra/Colonna in Silenzio su Workspace (Mod + Ctrl + 1..9, 0)
-    Mod+Ctrl+1 { move-column-to-workspace 1; }
-    Mod+Ctrl+2 { move-column-to-workspace 2; }
-    Mod+Ctrl+3 { move-column-to-workspace 3; }
-    Mod+Ctrl+4 { move-column-to-workspace 4; }
-    Mod+Ctrl+5 { move-column-to-workspace 5; }
-    Mod+Ctrl+6 { move-column-to-workspace 6; }
-    Mod+Ctrl+7 { move-column-to-workspace 7; }
-    Mod+Ctrl+8 { move-column-to-workspace 8; }
-    Mod+Ctrl+9 { move-column-to-workspace 9; }
-    Mod+Ctrl+0 { move-column-to-workspace 10; }
+    Mod+Ctrl+1 { move-column-to-workspace 1 focus=false; }
+    Mod+Ctrl+2 { move-column-to-workspace 2 focus=false; }
+    Mod+Ctrl+3 { move-column-to-workspace 3 focus=false; }
+    Mod+Ctrl+4 { move-column-to-workspace 4 focus=false; }
+    Mod+Ctrl+5 { move-column-to-workspace 5 focus=false; }
+    Mod+Ctrl+6 { move-column-to-workspace 6 focus=false; }
+    Mod+Ctrl+7 { move-column-to-workspace 7 focus=false; }
+    Mod+Ctrl+8 { move-column-to-workspace 8 focus=false; }
+    Mod+Ctrl+9 { move-column-to-workspace 9 focus=false; }
+    Mod+Ctrl+0 { move-column-to-workspace 10 focus=false; }
 
     // Scorri tra Workspaces
     Mod+Tab       { focus-workspace-down; }
