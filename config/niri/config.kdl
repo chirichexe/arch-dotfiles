@@ -1,71 +1,80 @@
 // =============================================================================
-// NIRI CONFIGURATION FILE (Hyprland Parity Single Config)
+// NIRI CONFIGURATION (Hyprland parity, single file)
 // =============================================================================
-// Questo file di configurazione unificato per Niri ricrea l'ambiente, le app
-// predefinite e tutte le scorciatoie da tastiera utilizzate in Hyprland.
-// È organizzato in un unico file separato da sezioni con commenti dettagliati.
+// Recreates the Hyprland setup in niri: environment, default apps, autostart,
+// window rules, look & feel and keybindings. Each section below mirrors the
+// matching Hyprland config file.
 //
-// Formato: KDL (https://kdl.dev)
+// Format: KDL (https://kdl.dev)
+//
+// Sections:
+//   1. Environment variables
+//   2. Input devices
+//   3. Outputs (monitors)
+//   4. Layout and appearance
+//   5. System settings and animations
+//   6. Autostart
+//   7. Window rules
+//   8. Keybindings
 // =============================================================================
 
 // -----------------------------------------------------------------------------
-// 1. VARIABILI D'AMBIENTE (ENVIRONMENT VARIABLES)
+// 1. ENVIRONMENT VARIABLES
 // -----------------------------------------------------------------------------
-// Variabili d'ambiente importate dalle configurazioni Hyprland
-// (~/.config/hypr/configs/ENVariables.lua & UserConfigs/01-UserDefaults.lua)
+// From Hyprland's configs/ENVariables.lua and UserConfigs/01-UserDefaults.lua
 environment {
-    // Editor di testo predefinito
+    // Default editor
     EDITOR "nvim"
 
-    // Versione dotfiles JakooLit
+    // JaKooLit dotfiles version
     DOTS_VERSION "2.3.20"
 
-    // Backend Toolkit
+    // Toolkit backends
     GDK_BACKEND "wayland,x11,*"
     QT_QPA_PLATFORM "wayland;xcb"
     CLUTTER_BACKEND "wayland"
 
-    // Specifiche XDG
+    // XDG session
     XDG_CURRENT_DESKTOP "niri"
     XDG_SESSION_DESKTOP "niri"
     XDG_SESSION_TYPE "wayland"
 
-    // Impostazioni QT
+    // Qt
     QT_AUTO_SCREEN_SCALE_FACTOR "1"
     QT_WAYLAND_DISABLE_WINDOWDECORATION "1"
     QT_QPA_PLATFORMTHEME "qt6ct"
 
-    // Scalamento applicativo
+    // Application scaling
     GDK_SCALE "1"
     QT_SCALE_FACTOR "1"
 
-    // Tema del Cursore
+    // Cursor theme
     HYPRCURSOR_THEME "Bibata-Modern-Ice"
     HYPRCURSOR_SIZE "24"
 
-    // Firefox Wayland
+    // Firefox on Wayland
     MOZ_ENABLE_WAYLAND "1"
 
-    // Electron (Wayland primario)
+    // Electron: prefer Wayland
     ELECTRON_OZONE_PLATFORM_HINT "auto"
 
-    // Driver GPU NVIDIA (se presenti)
+    // NVIDIA drivers (if present)
     LIBVA_DRIVER_NAME "nvidia"
     __GLX_VENDOR_LIBRARY_NAME "nvidia"
     NVD_BACKEND "direct"
     GSK_RENDERER "ngl"
 }
 
-// Disabilita le barre del titolo CSD lato client per un look minimale simile ad Hyprland
+// Ask clients not to draw their own title bars, for a minimal Hyprland-like look
 prefer-no-csd
 
 // -----------------------------------------------------------------------------
-// 2. DISPOSITIVI DI INPUT (KEYBOARD, TOUCHPAD, MOUSE)
+// 2. INPUT DEVICES (KEYBOARD, TOUCHPAD, MOUSE)
 // -----------------------------------------------------------------------------
 input {
     keyboard {
         xkb {
-            // È possibile specificare il layout di tastiera e le opzioni xkb qui
+            // Keyboard layouts and xkb options go here
             // layout "it,us"
             // options "grp:alt_shift_toggle"
         }
@@ -91,9 +100,9 @@ input {
 }
 
 // -----------------------------------------------------------------------------
-// 3. CONFIGURAZIONE MONITOR / OUTPUT
+// 3. OUTPUTS (MONITORS)
 // -----------------------------------------------------------------------------
-// Layout monitor (equivalente a monitor=eDP-1,preferred,auto,1 in Hyprland)
+// Laptop panel (Hyprland: monitor=eDP-1,preferred,auto,1)
 output "eDP-1" {
     // mode "1920x1080@120.030"
     scale 1.0
@@ -102,16 +111,17 @@ output "eDP-1" {
 }
 
 // -----------------------------------------------------------------------------
-// 4. LAYOUT, MARGINI E ASPETTO VISIVO
+// 4. LAYOUT AND APPEARANCE
 // -----------------------------------------------------------------------------
+// Matches Hyprland's UserConfigs/UserDecorations.lua
 layout {
-    // Margini tra le finestre in pixel logici (gaps_in / gaps_out)
-    // Same spacing as Hyprland (gaps_in 2 / gaps_out 4 in UserDecorations.lua)
+    // Gaps in logical pixels. Hyprland uses gaps_in 2 (2 + 2 between windows) and
+    // gaps_out 4, so 4 everywhere looks the same.
     gaps 4
 
     center-focused-column "never"
 
-    // Larghezze preimpostate per la gestione a colonne di Niri (Mod+R)
+    // Column widths cycled by Mod+R
     preset-column-widths {
         proportion 0.33333
         proportion 0.5
@@ -120,50 +130,61 @@ layout {
 
     default-column-width { proportion 0.5; }
 
-    // Anello di focus (Focus Ring) attorno alla finestra attiva - stile Hyprland
+    // Hyprland draws a border (border_size 2) on every window, active and inactive.
+    // niri's focus ring only surrounds the active window, so use the border instead.
     focus-ring {
-        width 2
-        active-color "#89b4fa"
-        inactive-color "#313244"
+        off
     }
 
-    // Bordo della finestra
+    // Colors are overridden by wallust (see the include below)
     border {
-        off
         width 2
         active-color "#89b4fa"
         inactive-color "#313244"
         urgent-color "#f38ba8"
     }
 
-    // Ombreggiature delle finestre
+    // Thin glow in the border colors, like Hyprland's shadow (range 3, render_power 1,
+    // color = active border, color_inactive = inactive border). Colors come from wallust.
     shadow {
-        softness 20
-        spread 3
-        offset x=0 y=4
-        color "#0007"
+        on
+        softness 3
+        spread 0
+        offset x=0 y=0
+        color "#89b4fa"
+        inactive-color "#313244"
     }
 }
 
-// Border / focus-ring / overview colors generated by wallust from the wallpaper
-// (template: ~/.config/wallust/templates/colors-niri.kdl), like Hyprland's borders.
-// Optional so niri still starts before wallust has run once.
+// Border, shadow and overview colors generated by wallust from the wallpaper
+// (template: ~/.config/wallust/templates/colors-niri.kdl), same as Hyprland's borders.
+// Optional, so niri still starts before wallust has run once.
 include optional=true "wallust-colors.kdl"
 
-// Inactive windows slightly transparent, like Hyprland (decoration.inactive_opacity = 0.9)
+// Background blur for transparent windows (Hyprland: blur size 6, passes 3, xray)
+blur {
+    passes 3
+}
+
+// All windows: rounded corners (Hyprland rounding = 10) and blur behind them
+window-rule {
+    geometry-corner-radius 10
+    clip-to-geometry true
+    background-effect {
+        blur true
+        xray true
+    }
+}
+
+// Inactive windows slightly transparent (Hyprland decoration.inactive_opacity = 0.9).
+// Hyprland also dims inactive windows (dim_strength 0.1); niri has no equivalent.
 window-rule {
     match is-active=false
     opacity 0.9
 }
 
-// Regola globale per l'aspetto delle finestre (angoli arrotondati come Hyprland rounding = 10)
-window-rule {
-    geometry-corner-radius 10
-    clip-to-geometry true
-}
-
 // -----------------------------------------------------------------------------
-// 5. IMPOSTAZIONI DI SISTEMA & ANIMAZIONI
+// 5. SYSTEM SETTINGS AND ANIMATIONS
 // -----------------------------------------------------------------------------
 screenshot-path "~/Pictures/Screenshots/Screenshot from %Y-%m-%d %H-%M-%S.png"
 
@@ -174,48 +195,48 @@ hotkey-overlay {
 animations {
     // slowdown 1.0
 
-    // Cambio workspace fluido (stile Hyprland)
+    // Workspace switch (smooth, Hyprland-like)
     workspace-switch {
         spring damping-ratio=0.85 stiffness=400 epsilon=0.0001
     }
 
-    // Movimento orizzontale delle colonne/vista
+    // Horizontal scrolling of columns / view
     horizontal-view-movement {
         spring damping-ratio=0.85 stiffness=400 epsilon=0.0001
     }
 
-    // Apertura finestre e Rofi (pop-in smooth stile Hyprland)
+    // Window and Rofi opening (smooth pop-in, Hyprland-like)
     window-open {
         spring damping-ratio=0.8 stiffness=450 epsilon=0.0001
     }
 
-    // Chiusura finestre
+    // Window closing
     window-close {
         duration-ms 200
         curve "ease-out-quad"
     }
 
-    // Movimento finestra / scambio colonne
+    // Window movement / column swaps
     window-movement {
         spring damping-ratio=0.8 stiffness=450 epsilon=0.0001
     }
 
-    // Ridimensionamento finestra
+    // Window resizing
     window-resize {
         spring damping-ratio=0.8 stiffness=450 epsilon=0.0001
     }
 
-    // Panoramica dei workspace (Overview)
+    // Workspace overview
     overview-open-close {
         spring damping-ratio=0.85 stiffness=400 epsilon=0.0001
     }
 
-    // Notifiche di configurazione
+    // Config reload notifications
     config-notification-open-close {
         spring damping-ratio=0.85 stiffness=500 epsilon=0.0001
     }
 
-    // UI dello screenshot
+    // Screenshot UI
     screenshot-ui-open {
         duration-ms 200
         curve "ease-out-quad"
@@ -223,66 +244,67 @@ animations {
 }
 
 // -----------------------------------------------------------------------------
-// 6. APPLICAZIONI IN AVVIO AUTOMATICO (STARTUP APPS / EXEC-ONCE)
+// 6. AUTOSTART (Hyprland exec-once)
 // -----------------------------------------------------------------------------
-// Processi e daemon avviati all'inizio della sessione (uguali a Startup_Apps.conf)
+// Session daemons and apps, same as Hyprland's Startup_Apps.lua
 
-// Daemon per lo sfondo (awww / swww)
+// Wallpaper daemon (awww / swww)
 spawn-at-startup "awww-daemon" "--format" "xrgb"
 
-// Aggiornamento dell'ambiente DBus e Systemd per Wayland
+// Export the Wayland environment to D-Bus and systemd
 spawn-sh-at-startup "dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
 spawn-sh-at-startup "systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP"
 
-// Terminale a discesa (Dropterminal background)
+// Drop-down terminal (started in the background)
 spawn-sh-at-startup "$HOME/.config/hypr/scripts/Dropterminal.sh kitty"
 
-// Polkit Authentication Agent
+// Polkit authentication agent
 spawn-sh-at-startup "$HOME/.config/hypr/scripts/Polkit.sh"
 
-// Applet di rete NetworkManager
+// NetworkManager applet
 spawn-at-startup "nm-applet" "--indicator"
 
-// Daemon per le notifiche (SwayNC)
+// Notification daemon (SwayNC)
 spawn-at-startup "swaync"
 
-// Barra di stato (Waybar)
+// Status bar (Waybar)
 spawn-at-startup "waybar"
 
-// Quickshell Overview (Disattivato per usare l'overview nativa di Niri ed evitare l'hot corner del mouse in alto a sinistra)
+// Quickshell overview: disabled in favour of niri's native overview (also avoids the
+// top-left mouse hot corner)
 // spawn-sh-at-startup "qs -c overview"
 
-// Management per inattività e blocco schermo (Hypridle)
+// Idle management and screen locking (Hypridle)
 spawn-at-startup "hypridle"
 
-// Inizializzazione gestione luce notturna (Hyprsunset)
+// Night light (Hyprsunset)
 spawn-sh-at-startup "$HOME/.config/hypr/scripts/Hyprsunset.sh init"
 
-// Gestore appunti (Cliphist)
+// Clipboard history (Cliphist)
 spawn-sh-at-startup "wl-paste --type text --watch cliphist store"
 spawn-sh-at-startup "wl-paste --type image --watch cliphist store"
 
-// Applet Bluetooth
+// Bluetooth applet
 spawn-at-startup "blueman-applet"
 
 // -----------------------------------------------------------------------------
-// 7. REGOLE PER LE FINESTRE (WINDOW RULES)
+// 7. WINDOW RULES
 // -----------------------------------------------------------------------------
-// Regole per le finestre (sovrapposte o fluttuanti) trasposte da WindowRules.conf
+// Floating and per-app rules ported from Hyprland's WindowRules.lua
 
-// Workaround Wezterm
+// WezTerm workaround
 window-rule {
     match app-id=r#"^org\.wezfurlong\.wezterm$"#
     default-column-width {}
 }
 
-// Firefox Picture-in-Picture -> Fluttuante
+// Firefox Picture-in-Picture: floating
 window-rule {
     match app-id=r#"firefox$"# title="^Picture-in-Picture$"
     open-floating true
 }
 
-// Pannelli di controllo, impostazioni e utilità -> Aperte in modalità fluttuante (Floating)
+// Control panels, settings and utilities: floating
 window-rule {
     match app-id=r#"^(pavucontrol|org\.pulseaudio\.pavucontrol|com\.saivert\.pwvucontrol)$"#
     match app-id=r#"^(blueman-manager|nm-connection-editor|nm-applet)$"#
@@ -294,13 +316,18 @@ window-rule {
     open-floating true
 }
 
-// Player Multimediali -> Fluttuanti
+// Media players: floating, fully opaque and without blur, even when inactive
+// (Hyprland: opacity 1.0 and no_blur for the multimedia tags)
 window-rule {
     match app-id=r#"^(mpv|vlc)$"#
     open-floating true
+    opacity 1.0
+    background-effect {
+        blur false
+    }
 }
 
-// Rofi launcher -> Fluttuante per animazione smooth
+// Rofi launcher: floating, for a smooth open animation
 window-rule {
     match app-id=r#"^rofi$"#
     open-floating true
@@ -311,150 +338,151 @@ layer-rule {
 }
 
 // -----------------------------------------------------------------------------
-// 8. SCORCIATOIE DA TASTIERA (KEYBINDINGS & SHORTCUTS)
+// 8. KEYBINDINGS
 // -----------------------------------------------------------------------------
-// Tutte le scorciatoie di Hyprland mappate con la sintassi nativa di Niri
+// Hyprland shortcuts translated to niri actions (Mod = Super)
 binds {
 
-    // === TASTO WIN (SUPER) DA SOLO -> OVERVIEW WORKSPACE ===
+    // === SUPER ALONE: OVERVIEW ===
     Super_L repeat=false { toggle-overview; }
     Super_R repeat=false { toggle-overview; }
 
-    // === APPLICAZIONI PRINCIPALI (STANDARD APPS) ===
-    // Mod+Return: Apri il terminale predefinito (kitty)
+    // === CORE APPS ===
+    // Mod+Return: terminal (kitty)
     Mod+Return hotkey-overlay-title="Open Terminal (kitty)" { spawn "kitty"; }
 
-    // Mod+E: Apri il gestore file predefinito (thunar)
+    // Mod+E: file manager (thunar)
     Mod+E hotkey-overlay-title="Open File Manager (thunar)" { spawn "thunar"; }
 
-    // Mod+B: Apri il browser web predefinito
+    // Mod+B: default web browser
     Mod+B hotkey-overlay-title="Open Browser" { spawn "xdg-open" "https://"; }
 
-    // Mod+D: Launcher applicazioni (Rofi drun con animazione smooth -normal-window)
+    // Mod+D: app launcher (Rofi drun; -normal-window for the smooth animation)
     Mod+D hotkey-overlay-title="App Launcher (Rofi)" { spawn-sh "pkill rofi || rofi -normal-window -show drun -modi drun,filebrowser,run,window"; }
 
-    // Mod+A: Panoramica del Desktop (Overview Toggle)
+    // Mod+A: workspace overview
     Mod+A hotkey-overlay-title="Desktop Overview" { toggle-overview; }
 
-    // Mod+Shift+Return: Terminale sotto la finestra attiva, stessa colonna (prima divisione 50/50, poi sezione aurea 61.8/38.2)
+    // Mod+Shift+Return: terminal below the active window, in the same column
+    // (first split 50/50, then golden ratio 61.8/38.2)
     Mod+Shift+Return hotkey-overlay-title="Open Terminal Below" { spawn-sh "$HOME/.config/hypr/scripts/NiriTermBelow.py kitty"; }
 
 
-    // === UTILITY, TEMI E SCRIPT UTENTE ===
-    // Mod+T: Cambio tema globale (Wallust / ThemeChanger)
+    // === UTILITIES, THEMES AND USER SCRIPTS ===
+    // Mod+T: global theme switcher (Wallust / ThemeChanger)
     Mod+T hotkey-overlay-title="Global Theme Switcher" { spawn-sh "$HOME/.config/hypr/scripts/ThemeChanger.sh"; }
 
-    // Mod+H: Aiuto / Cheat sheet scorciatoie
+    // Mod+H: keybinding cheat sheet
     Mod+H hotkey-overlay-title="Help / Key Hints" { spawn-sh "$HOME/.config/hypr/scripts/KeyHints.sh"; }
 
-    // Mod+Alt+R: Ricarica Waybar e menu
+    // Mod+Alt+R: reload Waybar and menus
     Mod+Alt+R hotkey-overlay-title="Refresh Bar & Menus" { spawn-sh "$HOME/.config/hypr/scripts/Refresh.sh"; }
 
-    // Mod+Alt+E: Menu Emoji (RofiEmoji)
+    // Mod+Alt+E: emoji picker (RofiEmoji)
     Mod+Alt+E hotkey-overlay-title="Emoji Menu" { spawn-sh "$HOME/.config/hypr/scripts/RofiEmoji.sh"; }
 
-    // Mod+S: Ricerca Web (RofiSearch)
+    // Mod+S: web search (RofiSearch)
     Mod+S hotkey-overlay-title="Web Search" { spawn-sh "$HOME/.config/hypr/scripts/RofiSearch.sh"; }
 
-    // Mod+Ctrl+S: Selettore finestre (Rofi Window Switcher)
+    // Mod+Ctrl+S: window switcher (Rofi)
     Mod+Ctrl+S hotkey-overlay-title="Window Switcher" { spawn-sh "rofi -show window"; }
 
-    // Mod+Alt+V: Gestore appunti (ClipManager)
+    // Mod+Alt+V: clipboard manager (ClipManager)
     Mod+Alt+V hotkey-overlay-title="Clipboard Manager" { spawn-sh "$HOME/.config/hypr/scripts/ClipManager.sh"; }
 
-    // Mod+Ctrl+R: Selettore temi Rofi
+    // Mod+Ctrl+R: Rofi theme selector
     Mod+Ctrl+R hotkey-overlay-title="Rofi Theme Selector" { spawn-sh "$HOME/.config/hypr/scripts/RofiThemeSelector.sh"; }
 
-    // Mod+Ctrl+Shift+R: Selettore temi Rofi (Modificato)
+    // Mod+Ctrl+Shift+R: Rofi theme selector (modified)
     Mod+Ctrl+Shift+R hotkey-overlay-title="Rofi Theme Selector (Modified)" { spawn-sh "pkill rofi || true && $HOME/.config/hypr/scripts/RofiThemeSelector-modified.sh"; }
 
-    // Mod+Ctrl+Alt+B: Mostra/Nascondi Waybar
+    // Mod+Ctrl+Alt+B: show/hide Waybar
     Mod+Ctrl+Alt+B hotkey-overlay-title="Toggle Waybar" { spawn-sh "pkill -SIGUSR1 waybar"; }
 
-    // Mod+Ctrl+B: Menu stili Waybar
+    // Mod+Ctrl+B: Waybar style menu
     Mod+Ctrl+B hotkey-overlay-title="Waybar Styles Menu" { spawn-sh "$HOME/.config/hypr/scripts/WaybarStyles.sh"; }
 
-    // Mod+Alt+B: Menu layout Waybar
+    // Mod+Alt+B: Waybar layout menu
     Mod+Alt+B hotkey-overlay-title="Waybar Layout Menu" { spawn-sh "$HOME/.config/hypr/scripts/WaybarLayout.sh"; }
 
-    // Mod+N: Attiva/Disattiva luce notturna (Hyprsunset)
+    // Mod+N: toggle night light (Hyprsunset)
     Mod+N hotkey-overlay-title="Toggle Night Light" { spawn-sh "$HOME/.config/hypr/scripts/Hyprsunset.sh toggle"; }
 
-    // Mod+Shift+M: Musica Online (RofiBeats)
+    // Mod+Shift+M: online music (RofiBeats)
     Mod+Shift+M hotkey-overlay-title="Online Music (RofiBeats)" { spawn-sh "$HOME/.config/hypr/UserScripts/RofiBeats.sh"; }
 
-    // Mod+W: Selettore Sfondi (WallpaperSelect)
+    // Mod+W: wallpaper picker (WallpaperSelect)
     Mod+W hotkey-overlay-title="Select Wallpaper" { spawn-sh "$HOME/.config/hypr/UserScripts/WallpaperSelect.sh"; }
 
-    // Mod+Shift+W: Effetti Sfondo (WallpaperEffects)
+    // Mod+Shift+W: wallpaper effects (WallpaperEffects)
     Mod+Shift+W hotkey-overlay-title="Wallpaper Effects" { spawn-sh "$HOME/.config/hypr/UserScripts/WallpaperEffects.sh"; }
 
-    // Ctrl+Alt+W: Sfondo Casuale (WallpaperRandom)
+    // Ctrl+Alt+W: random wallpaper (WallpaperRandom)
     Ctrl+Alt+W hotkey-overlay-title="Random Wallpaper" { spawn-sh "$HOME/.config/hypr/UserScripts/WallpaperRandom.sh"; }
 
-    // Mod+Shift+K: Cerca scorciatoie (KeyBinds)
+    // Mod+Shift+K: search keybindings (KeyBinds)
     Mod+Shift+K hotkey-overlay-title="Search Keybinds" { spawn-sh "$HOME/.config/hypr/scripts/KeyBinds.sh"; }
 
-    // Mod+Shift+A: Menu Animazioni
+    // Mod+Shift+A: animations menu
     Mod+Shift+A hotkey-overlay-title="Animations Menu" { spawn-sh "$HOME/.config/hypr/scripts/Animations.sh"; }
 
-    // Mod+Shift+O: Cambia tema Zsh
+    // Mod+Shift+O: change Zsh theme
     Mod+Shift+O hotkey-overlay-title="Change Zsh Theme" { spawn-sh "$HOME/.config/hypr/UserScripts/ZshChangeTheme.sh"; }
 
-    // Mod+Alt+K: Cambia layout tastiera
+    // Mod+Alt+K: switch keyboard layout
     Mod+Alt+K hotkey-overlay-title="Switch Keyboard Layout" { spawn-sh "$HOME/.config/hypr/scripts/KeyboardLayout.sh switch"; }
 
-    // Mod+Alt+C: Calcolatrice Rofi
+    // Mod+Alt+C: calculator (Rofi)
     Mod+Alt+C hotkey-overlay-title="Calculator" { spawn-sh "$HOME/.config/hypr/UserScripts/RofiCalc.sh"; }
 
 
-    // === GESTIONE SESSIONE E SISTEMA ===
-    // Mod+Q: Chiudi la finestra attiva
+    // === SESSION AND SYSTEM ===
+    // Mod+Q: close the active window
     Mod+Q repeat=false hotkey-overlay-title="Close Active Window" { close-window; }
 
-    // Mod+Shift+Q: Termina il processo attivo
+    // Mod+Shift+Q: kill the active window's process
     Mod+Shift+Q hotkey-overlay-title="Kill Active Process" { spawn-sh "$HOME/.config/hypr/scripts/KillActiveProcess.sh"; }
 
-    // Ctrl+Alt+L: Blocca lo schermo (LockScreen)
+    // Ctrl+Alt+L: lock screen
     Ctrl+Alt+L hotkey-overlay-title="Lock Screen" { spawn-sh "$HOME/.config/hypr/scripts/LockScreen.sh"; }
 
-    // Ctrl+Alt+P: Menu Spegnimento / Power Menu (Wlogout)
+    // Ctrl+Alt+P: power menu (Wlogout)
     Ctrl+Alt+P hotkey-overlay-title="Power Menu" { spawn-sh "$HOME/.config/hypr/scripts/Wlogout.sh"; }
 
-    // Mod+Shift+N: Centro Notifiche (SwayNC)
+    // Mod+Shift+N: notification center (SwayNC)
     Mod+Shift+N hotkey-overlay-title="Notification Center" { spawn-sh "swaync-client -t -sw"; }
 
-    // Mod+Shift+E: Menu Impostazioni Rapide (KooL Quick Settings)
+    // Mod+Shift+E: quick settings menu (KooL Quick Settings)
     Mod+Shift+E hotkey-overlay-title="Quick Settings Menu" { spawn-sh "$HOME/.config/hypr/scripts/Kool_Quick_Settings.sh"; }
 
-    // Ctrl+Alt+Delete: Esci da Niri
+    // Ctrl+Alt+Delete: quit niri
     Ctrl+Alt+Delete hotkey-overlay-title="Quit Niri" { quit; }
 
-    // Mod+Escape: Sblocco scorciatoie se un'app blocca la tastiera
+    // Mod+Escape: re-enable compositor shortcuts if an app is inhibiting them
     Mod+Escape allow-inhibiting=false { toggle-keyboard-shortcuts-inhibit; }
 
 
-    // === CATTURA SCHERMO (SCREENSHOTS) ===
-    // Stamp / Mod+Stamp: Screenshot Immediato
+    // === SCREENSHOTS ===
+    // Print / Mod+Print: full screenshot
     Print { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --now"; }
     Mod+Print hotkey-overlay-title="Screenshot Now" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --now"; }
 
-    // Mod+Shift+Stamp: Screenshot Area
+    // Mod+Shift+Print: area
     Mod+Shift+Print hotkey-overlay-title="Screenshot Area" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --area"; }
 
-    // Mod+Ctrl+Stamp: Screenshot ritardato 5 secondi
+    // Mod+Ctrl+Print: 5 second delay
     Mod+Ctrl+Print hotkey-overlay-title="Screenshot (5s Delay)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --in5"; }
 
-    // Mod+Ctrl+Shift+Stamp: Screenshot ritardato 10 secondi
+    // Mod+Ctrl+Shift+Print: 10 second delay
     Mod+Ctrl+Shift+Print hotkey-overlay-title="Screenshot (10s Delay)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --in10"; }
 
-    // Alt+Stamp: Screenshot Finestra Attiva
+    // Alt+Print: active window
     Alt+Print hotkey-overlay-title="Screenshot Active Window" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --active"; }
 
-    // Mod+Shift+S: Screenshot con Swappy
+    // Mod+Shift+S: screenshot and edit in Swappy
     Mod+Shift+S hotkey-overlay-title="Screenshot (Swappy)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --swappy"; }
 
-    // Tasti Laptop F6 per Screenshot
+    // Same screenshots on F6, for laptops without a Print key
     Mod+F6 hotkey-overlay-title="Screenshot Now (F6)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --now"; }
     Mod+Shift+F6 hotkey-overlay-title="Screenshot Area (F6)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --area"; }
     Mod+Ctrl+F6 hotkey-overlay-title="Screenshot 5s Delay (F6)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --in5"; }
@@ -462,8 +490,8 @@ binds {
     Alt+F6 hotkey-overlay-title="Screenshot Active Window (F6)" { spawn-sh "$HOME/.config/hypr/scripts/ScreenShot.sh --active"; }
 
 
-    // === CONTROLLI MULTIMEDIALI ED HARDWARE ===
-    // Controllo Volume Audio
+    // === MEDIA AND HARDWARE KEYS ===
+    // Volume
     XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Volume.sh --inc"; }
     XF86AudioLowerVolume allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Volume.sh --dec"; }
     Alt+XF86AudioRaiseVolume allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Volume.sh --inc-precise"; }
@@ -471,32 +499,34 @@ binds {
     XF86AudioMicMute allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Volume.sh --toggle-mic"; }
     XF86AudioMute allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Volume.sh --toggle"; }
 
-    // Sospensione e Modalità Aereo
+    // Suspend and airplane mode
     XF86Sleep allow-when-locked=true { spawn "systemctl" "suspend"; }
     XF86Rfkill allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/AirplaneMode.sh"; }
 
-    // Controlli Riproduzione Media
+    // Media playback
     XF86AudioPlay allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/MediaCtrl.sh --pause"; }
     XF86AudioPause allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/MediaCtrl.sh --pause"; }
     XF86AudioNext allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/MediaCtrl.sh --nxt"; }
     XF86AudioPrev allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/MediaCtrl.sh --prv"; }
     XF86AudioStop allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/MediaCtrl.sh --stop"; }
 
-    // Luminosità Schermo e Tastiera
+    // Screen and keyboard brightness
     XF86MonBrightnessUp allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Brightness.sh --inc"; }
     XF86MonBrightnessDown allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/Brightness.sh --dec"; }
     XF86KbdBrightnessUp allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/BrightnessKbd.sh --inc"; }
     XF86KbdBrightnessDown allow-when-locked=true { spawn-sh "$HOME/.config/hypr/scripts/BrightnessKbd.sh --dec"; }
 
-    // Tasti Speciali Asus / Laptop
+    // Asus / laptop special keys
     XF86Launch1 { spawn "rog-control-center"; }
     XF86Launch3 { spawn "asusctl" "led-mode" "-n"; }
     XF86Launch4 { spawn "asusctl" "profile" "-n"; }
     XF86TouchpadToggle { spawn-sh "$HOME/.config/hypr/scripts/TouchPad.sh"; }
 
 
-    // === NAVIGAZIONE FINESTRE E COLONNE (NIRI NATIVE) ===
-    // Spostamento del Focus (Frecce -> Left/Right per Colonne, oltre il bordo passa al monitor adiacente; Up/Down per Finestre nella colonna, oltre il bordo passa al Workspace; Vim J/K/L per Finestre/Colonne)
+    // === WINDOW AND COLUMN NAVIGATION ===
+    // Focus. Left/Right move between columns and cross to the next monitor at the edge;
+    // Up/Down move between windows in a column and cross to the next workspace at the edge.
+    // Vim keys: J/K for windows, L for columns.
     Mod+Left  { focus-column-or-monitor-left; }
     Mod+Right { focus-column-or-monitor-right; }
     Mod+Up    { focus-window-or-workspace-up; }
@@ -505,7 +535,7 @@ binds {
     Mod+K     { focus-window-up; }
     Mod+L     { focus-column-or-monitor-right; }
 
-    // Spostamento Finestra / Colonna
+    // Move windows / columns (same edge behavior as focus)
     Mod+Ctrl+Left  { move-column-left-or-to-monitor-left; }
     Mod+Ctrl+Right { move-column-right-or-to-monitor-right; }
     Mod+Ctrl+Up    { move-window-up-or-to-workspace-up; }
@@ -514,28 +544,29 @@ binds {
     Mod+Ctrl+K     { move-window-up; }
     Mod+Ctrl+L     { move-column-right-or-to-monitor-right; }
 
-    // Spostamento Finestra/Colonna tra Monitor
+    // Move a column to another monitor
     Mod+Alt+Shift+Left  hotkey-overlay-title="Move Column to Monitor Left" { move-column-to-monitor-left; }
     Mod+Alt+Shift+Right hotkey-overlay-title="Move Column to Monitor Right" { move-column-to-monitor-right; }
     Mod+Alt+Shift+Up    hotkey-overlay-title="Move Column to Monitor Up" { move-column-to-monitor-up; }
     Mod+Alt+Shift+Down  hotkey-overlay-title="Move Column to Monitor Down" { move-column-to-monitor-down; }
 
-    // Unione ed Espulsione Finestre in Colonne
+    // Merge windows into columns / split them out
     Mod+BracketLeft  { consume-or-expel-window-left; }
     Mod+BracketRight { consume-or-expel-window-right; }
     Mod+Comma        { consume-window-into-column; }
     Mod+Period       { expel-window-from-column; }
 
-    // Dimensionamento Colonne e Preset
+    // Cycle preset column widths
     Mod+R            { switch-preset-column-width; }
 
-    // Ridimensionamento Attivo (Mod + Shift + Frecce): Su/Giù spostano il bordo condiviso con la finestra vicina
+    // Resize (Mod+Shift+arrows): Left/Right change the column width,
+    // Up/Down move the edge shared with the neighbouring window
     Mod+Shift+Left  { set-column-width "-50"; }
     Mod+Shift+Right { set-column-width "+50"; }
     Mod+Shift+Up    { spawn-sh "$HOME/.config/hypr/scripts/NiriResizeHeight.py up"; }
     Mod+Shift+Down  { spawn-sh "$HOME/.config/hypr/scripts/NiriResizeHeight.py down"; }
 
-    // Schermo Intero, Massimizzazione e Modalità Fluttuante
+    // Fullscreen, maximize and floating
     Mod+Shift+F { fullscreen-window; }
     Mod+Ctrl+F  { maximize-column; }
     Mod+M       { maximize-window-to-edges; }
@@ -545,15 +576,15 @@ binds {
     Mod+C       { center-column; }
     Mod+Ctrl+C  { center-visible-columns; }
 
-    // Panoramica (Overview) Niri
+    // niri overview
     Mod+O repeat=false { toggle-overview; }
 
-    // Mostra Overlay Scorciatoie
+    // Show the hotkey overlay
     Mod+Shift+Slash { show-hotkey-overlay; }
 
 
-    // === GESTIONE AREA DI LAVORO (WORKSPACES) ===
-    // Selezione Workspace (Mod + 1..9, 0)
+    // === WORKSPACES ===
+    // Focus workspace (Mod + 1..9, 0)
     Mod+1 { focus-workspace 1; }
     Mod+2 { focus-workspace 2; }
     Mod+3 { focus-workspace 3; }
@@ -565,7 +596,7 @@ binds {
     Mod+9 { focus-workspace 9; }
     Mod+0 { focus-workspace 10; }
 
-    // Sposta Finestra/Colonna su Workspace (Mod + Shift + 1..9, 0)
+    // Move column to workspace and follow it (Mod + Shift + 1..9, 0)
     Mod+Shift+1 { move-column-to-workspace 1; }
     Mod+Shift+2 { move-column-to-workspace 2; }
     Mod+Shift+3 { move-column-to-workspace 3; }
@@ -577,7 +608,7 @@ binds {
     Mod+Shift+9 { move-column-to-workspace 9; }
     Mod+Shift+0 { move-column-to-workspace 10; }
 
-    // Sposta Finestra/Colonna in Silenzio su Workspace (Mod + Ctrl + 1..9, 0)
+    // Move column to workspace silently (Mod + Ctrl + 1..9, 0)
     Mod+Ctrl+1 { move-column-to-workspace 1 focus=false; }
     Mod+Ctrl+2 { move-column-to-workspace 2 focus=false; }
     Mod+Ctrl+3 { move-column-to-workspace 3 focus=false; }
@@ -589,13 +620,13 @@ binds {
     Mod+Ctrl+9 { move-column-to-workspace 9 focus=false; }
     Mod+Ctrl+0 { move-column-to-workspace 10 focus=false; }
 
-    // Scorri tra Workspaces
+    // Cycle workspaces
     Mod+Tab       { focus-workspace-down; }
     Mod+Shift+Tab { focus-workspace-up; }
     Mod+U         { focus-workspace-down; }
     Mod+Shift+U   { move-column-to-workspace-down; }
 
-    // Scroll Mouse su Workspaces
+    // Mouse wheel over workspaces
     Mod+WheelScrollDown      cooldown-ms=150 { focus-workspace-down; }
     Mod+WheelScrollUp        cooldown-ms=150 { focus-workspace-up; }
     Mod+Ctrl+WheelScrollDown cooldown-ms=150 { move-column-to-workspace-down; }
