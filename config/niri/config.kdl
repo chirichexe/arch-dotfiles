@@ -336,7 +336,7 @@ binds {
     // Mod+A: Panoramica del Desktop (Overview Toggle)
     Mod+A hotkey-overlay-title="Desktop Overview" { toggle-overview; }
 
-    // Mod+Shift+Return: Terminale sotto la finestra attiva, stessa colonna (sezione aurea 61.8/38.2)
+    // Mod+Shift+Return: Terminale sotto la finestra attiva, stessa colonna (prima divisione 50/50, poi sezione aurea 61.8/38.2)
     Mod+Shift+Return hotkey-overlay-title="Open Terminal Below" { spawn-sh "$HOME/.config/hypr/scripts/NiriTermBelow.py kitty"; }
 
 

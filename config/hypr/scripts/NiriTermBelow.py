@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 # Niri: open a terminal stacked below the focused window, in the same column, Hyprland-style.
-# The new window gets the smaller golden-ratio share of the column height (38.2%).
+# Splitting a lone window halves it (50/50); in a column that is already split, the new window
+# gets the smaller golden-ratio share of the column height (38.2%), Hyprland dwindle-style.
 #
 # Niri reports a new window before its first frame is drawn. Moving it into the focused column
 # right then (one IPC batch) makes niri play the normal open animation directly in its final
@@ -14,7 +15,8 @@ import sys
 import time
 
 TERM = sys.argv[1] if len(sys.argv) > 1 else "kitty"
-HEIGHT = 38.2  # percent
+HALF = 50.0  # percent
+GOLDEN = 38.2  # percent
 TIMEOUT = 5.0
 
 
@@ -41,7 +43,13 @@ if not focused or focused.get("is_floating"):
     subprocess.Popen([TERM], start_new_session=True)
     sys.exit(0)
 
-known = {w["id"] for w in niri_json("windows")}
+windows = niri_json("windows")
+known = {w["id"] for w in windows}
+column = focused["layout"]["pos_in_scrolling_layout"][0]
+column_size = sum(1 for w in windows
+                  if w["workspace_id"] == focused["workspace_id"] and not w.get("is_floating")
+                  and (w["layout"]["pos_in_scrolling_layout"] or [None])[0] == column)
+height = HALF if column_size <= 1 else GOLDEN
 
 # Listen before spawning so the new window's first event cannot be missed
 events = subprocess.Popen(["niri", "msg", "--json", "event-stream"],
@@ -69,5 +77,5 @@ if new_id is None:
 # the bottom of the focused column.
 send_actions(
     {"ConsumeOrExpelWindowLeft": {"id": new_id}},
-    {"SetWindowHeight": {"id": new_id, "change": {"SetProportion": HEIGHT}}},
+    {"SetWindowHeight": {"id": new_id, "change": {"SetProportion": height}}},
 )
