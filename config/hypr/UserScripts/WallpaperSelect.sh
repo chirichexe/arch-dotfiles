@@ -28,7 +28,13 @@ fi
 
 # Variables
 rofi_theme="$HOME/.config/rofi/config-wallpaper.rasi"
-focused_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
+if [[ -n "$NIRI_SOCKET" ]]; then
+  # niri reports the logical (already scaled) size, so the scale is folded in
+  read -r focused_monitor monitor_height < <(niri msg -j focused-output | jq -r '"\(.name) \(.logical.height)"')
+  scale_factor=1
+else
+  focused_monitor=$(hyprctl monitors -j | jq -r '.[] | select(.focused) | .name')
+fi
 
 # Ensure focused_monitor is detected
 if [[ -z "$focused_monitor" ]]; then
@@ -37,8 +43,10 @@ if [[ -z "$focused_monitor" ]]; then
 fi
 
 # Monitor details
-scale_factor=$(hyprctl monitors -j | jq -r --arg mon "$focused_monitor" '.[] | select(.name == $mon) | .scale')
-monitor_height=$(hyprctl monitors -j | jq -r --arg mon "$focused_monitor" '.[] | select(.name == $mon) | .height')
+if [[ -z "$NIRI_SOCKET" ]]; then
+  scale_factor=$(hyprctl monitors -j | jq -r --arg mon "$focused_monitor" '.[] | select(.name == $mon) | .scale')
+  monitor_height=$(hyprctl monitors -j | jq -r --arg mon "$focused_monitor" '.[] | select(.name == $mon) | .height')
+fi
 
 icon_size=$(echo "scale=1; ($monitor_height * 3) / ($scale_factor * 150)" | bc)
 adjusted_icon_size=$(echo "$icon_size" | awk '{if ($1 < 15) $1 = 20; if ($1 > 25) $1 = 25; print $1}')
