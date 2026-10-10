@@ -164,6 +164,8 @@ include optional=true "wallust-colors.kdl"
 // Background blur for transparent windows (Hyprland: blur size 6, passes 3, xray)
 blur {
     passes 3
+    // Lower than the default (3) so the background shows through a bit more
+    offset 1.75
 }
 
 // All windows: rounded corners (Hyprland rounding = 10) and blur behind them
