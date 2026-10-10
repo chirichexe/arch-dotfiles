@@ -1,41 +1,23 @@
 /* ---- https://github.com/chirichexe ---- */
-/* Transparent improved */
+/* Transparent improved (niri) */
 
 /* NOTE: This style is NOT vertical layout friendly! */
 
-@define-color white      	#F2F2F2;
-@define-color black      	#000000;
-@define-color text       	#FFFFFF;
-@define-color lightgray  	#686868;
-@define-color darkgray   	#353535;
-
-@define-color transparent	rgba(1, 1, 1, 0.5);
-@define-color teal-trans	rgba(1, 117, 84, 0.5);
-@define-color cyan			rgba(53, 140, 169, 1);
-
-@define-color background-module     @color1;
-@define-color background-module2	@color11;
-@define-color border-color          @color12;
-@define-color button-color          @color10;
-@define-color button-hover          @color13;
-
-@define-color backgroundlight @color12;
-@define-color backgrounddark #FFFFFF;
-@define-color workspacesbackground1 @color12;
-@define-color workspacesbackground2 #FFFFFF;
-@define-color bordercolor @color11;
-@define-color textcolor1 @color12;
-@define-color textcolor2 #FFFFFF;
-@define-color textcolor3 #FFFFFF;
-@define-color iconcolor #FFFFFF;
-
 @import '../../.config/waybar/wallust/colors-waybar.css';
-@import "../waybar/style/catppuccin-themes/latte.css";
+
+@define-color text       #FFFFFF;
+@define-color text-dim   rgba(255, 255, 255, 0.55);
+@define-color island     rgba(10, 10, 12, 0.55);
+@define-color island-border rgba(255, 255, 255, 0.08);
+@define-color accent     @color13;
+@define-color good       #7ee787;
+@define-color warn       #f2cc60;
+@define-color bad        #ff5f5f;
 
 * {
     font-family: "JetBrainsMono Nerd Font";
-    font-weight: bold;
-	min-height: 0;  
+    font-weight: 600;
+    min-height: 0;
     /* set font-size to 100% if font scaling is set to 1.00 using nwg-look */
     font-size: 97%;
     font-feature-settings: '"zero", "ss01", "ss02", "ss03", "ss04", "ss05", "cv31"';
@@ -43,59 +25,33 @@
 
 window#waybar {
     background-color: transparent;
-    border-radius: 6px;
-	padding-top: 2px;
-	padding-bottom: 0px;
-	padding-right: 4px;
-	padding-left: 4px;
+    color: @text;
 }
 
 tooltip {
-    background: #1e1e2e;
-    border-radius: 12px;
-    border-width: 1px;
-    border-style: solid;
-    border-color: @border-color;
-    color: #ffffff;
+    background: rgba(20, 20, 24, 0.95);
+    border-radius: 8px;
+    border: 1px solid @island-border;
+    color: @text;
 }
 
-#taskbar button,
-#workspaces button {
-    padding: 0px 3px;
-    margin: 3px 2px;
-    border-radius: 4px;
-    color: @textcolor1;
-    background-color: @workspacesbackground2;
-    transition: all 0.1s linear;
-    opacity: 0.4;
+tooltip label {
+    color: @text;
 }
 
-#taskbar button.active,
-#workspaces button.active {
-    color: @textcolor1;
-    background: @workspacesbackground2;
-    border-radius: 4px;
-    min-width: 30px;
-    animation: gradient_f 20s ease-in infinite;
-    transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
-    opacity: 1.0;
+/*----- sections: one translucent island each -----*/
+.modules-left,
+.modules-center,
+.modules-right {
+    background-color: @island;
+    border: 1px solid @island-border;
+    border-radius: 10px;
+    padding: 2px 6px;
 }
 
-#taskbar button:hover,
-#workspaces button:hover {
-    color: @red;
-    background: @workspacesbackground2;
-    border-radius: 3px;
-    opacity:0.6;
-    animation: gradient_f 20s ease-in infinite;
-    transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
-}
-
-/* niri: group/niri_workspaces = one custom module per workspace (NiriWorkspaces.py),
-   styled exactly like the Hyprland #workspaces buttons above */
+/*----- workspaces (group/niri_workspaces, one module per slot from NiriWorkspaces.py) -----*/
 #niri_workspaces {
-    padding-left: 6px;
-    padding-right: 6px;
+    padding: 0px 4px;
 }
 
 #custom-niri_workspaces-rw {
@@ -104,212 +60,141 @@ tooltip {
 }
 
 #waybar .niri-ws {
-    padding: 0px 8px;  /* labels lack the inner padding GTK gives Hyprland's buttons */
+    padding: 0px 8px;
     min-width: 12px;
-    margin: 3px 2px;
-    border-radius: 4px;
-    color: @textcolor1;
-    background-color: @workspacesbackground2;
-    transition: all 0.1s linear;
-    opacity: 0.4;
+    margin: 4px 2px;
+    border-radius: 6px;
+    color: @text;
+    background-color: rgba(255, 255, 255, 0.10);
+    transition: all 0.15s ease-in-out;
+}
+
+#waybar .niri-ws.empty {
+    color: @text-dim;
+    background-color: transparent;
 }
 
 #waybar .niri-ws.active {
-    border-radius: 4px;
-    min-width: 30px;
-    transition: all 0.3s cubic-bezier(.55,-0.68,.48,1.682);
-    opacity: 1.0;
+    min-width: 28px;
+    color: #11111b;
+    background-color: @text;
 }
 
 #waybar .niri-ws:hover {
-    color: @red;
-    border-radius: 3px;
-    opacity: 0.6;
+    background-color: rgba(255, 255, 255, 0.25);
 }
 
 #waybar .niri-ws.urgent {
     color: #11111b;
-    border-radius: 10px;
+    background-color: @bad;
 }
 
-#workspaces button.focused {
-    color: #d8dee9;
-}
-
-#workspaces button.urgent {
-    color: #11111b;
-    border-radius: 10px;
-}
-
-/*-----module groups----*/
-.modules-left,
-.modules-right {
-    background-color: transparent;
-}
-
-.modules-center {
-    background-color: transparent;/*@background-module;*/
-    border-radius: 0px 0px 45px 45px;
-	padding-top: 8px;
-	padding-bottom: 8px;
-	padding-left: 10px;
-	padding-right: 6px;
-}
-
+/*----- modules -----*/
 #backlight,
-#backlight-slider,
 #battery,
-#bluetooth,
 #clock,
 #cpu,
 #disk,
 #idle_inhibitor,
 #keyboard-state,
 #memory,
-#mode,
-#mpris,
 #network,
 #power-profiles-daemon,
 #pulseaudio,
-#pulseaudio-slider,
-#taskbar button,
-#taskbar,
 #temperature,
 #tray,
 #window,
-#wireplumber,
-#workspaces,
-#custom-backlight,
 #custom-browser,
 #custom-cava_mviz,
-#custom-cycle_wall,
 #custom-dot_update,
 #custom-file_manager,
-#custom-keybinds,
-#custom-keyboard,
 #custom-light_dark,
 #custom-lock,
-#custom-hint,
-#custom-hypridle,
 #custom-menu,
-#custom-playerctl,
-#custom-power_vertical,
-#custom-power,
-#custom-quit,
-#custom-reboot,
-#custom-settings,
-#custom-spotify,
-#custom-swaync,
 #custom-tty,
-#custom-updater,
-#custom-hyprpicker,
-#custom-weather,
-#custom-weather.clearNight,
-#custom-weather.cloudyFoggyDay,
-#custom-weather.cloudyFoggyNight,
-#custom-weather.default, 
-#custom-weather.rainyDay,
-#custom-weather.rainyNight,
-#custom-weather.severe,
-#custom-weather.showyIcyDay,
-#custom-weather.snowyIcyNight,
-#custom-weather.sunnyDay {
-    color: @white;
-	padding-right: 6px;
-	padding-left: 6px;
+#custom-playerctl,
+#custom-pomodoro,
+#custom-power,
+#custom-swaync {
+    color: @text;
+    padding: 0px 7px;
 }
 
-#temperature.critical {
-    background-color: #ff0000;
+#custom-separator {
+    color: @text-dim;
+    padding: 0px 2px;
+}
+
+#window {
+    color: @text-dim;
+    padding-left: 10px;
+}
+
+#clock {
+    padding: 0px 10px;
+}
+
+/* notification bell: always white, the badge carries the colour */
+#custom-swaync {
+    color: @text;
+    padding: 0px 8px 0px 4px;
+}
+
+#custom-playerctl {
+    color: @text-dim;
+}
+
+#custom-playerctl.Playing {
+    color: @text;
+}
+
+#custom-power {
+    padding: 0px 6px 0px 8px;
+}
+
+/*----- states -----*/
+#idle_inhibitor.activated {
+    color: @warn;
+}
+
+#pulseaudio.muted,
+#pulseaudio.source-muted {
+    color: @text-dim;
+}
+
+#network.disconnected {
+    color: @text-dim;
+}
+
+#battery.charging,
+#battery.plugged {
+    color: @good;
+}
+
+#battery.warning:not(.charging) {
+    color: @warn;
 }
 
 @keyframes blink {
     to {
-        color: #000000;
+        color: @text;
     }
 }
 
-#pulseaudio.muted {
-    color: red;
+#battery.critical:not(.charging) {
+    color: @bad;
+    animation-name: blink;
+    animation-duration: 1.5s;
+    animation-timing-function: steps(12);
+    animation-iteration-count: infinite;
+    animation-direction: alternate;
 }
 
 #temperature.critical {
-    background-color: @red;
+    color: @bad;
 }
 
-#battery.critical:not(.charging) {
-	color: #f53c3c;
-	animation-name: blink;
-	animation-duration: 3.0s;
-	animation-timing-function: steps(12);
-	animation-iteration-count: infinite;
-	animation-direction: alternate;
+#tray > .needs-attention {
+    background-color: @bad;
+    border-radius: 6px;
 }
-
-#pulseaudio-slider,
-#pulseaudio {
-	color: @foreground;
-}
-
-#backlight-slider slider,
-#pulseaudio-slider slider {
-	min-width: 0px;
-	min-height: 0px;
-	opacity: 0;
-	background-image: none;
-	border: none;
-	box-shadow: none;
-}
-
-#backlight-slider trough,
-#pulseaudio-slider trough {
-	min-width: 80px;
-	min-height: 5px;
-	border-radius: 5px;
-}
-
-#backlight-slider highlight,
-#pulseaudio-slider highlight {
-	min-height: 10px;
-	border-radius: 5px;
-}
-
-#custom-hypridle,
-#custom-lock,
-#idle_inhibitor {
-    color: @white;
-}
-
-#custom-weather,
-#custom-weather.clearNight,
-#custom-weather.cloudyFoggyDay,
-#custom-weather.cloudyFoggyNight,
-#custom-weather.default, 
-#custom-weather.rainyDay,
-#custom-weather.rainyNight,
-#custom-weather.severe,
-#custom-weather.showyIcyDay,
-#custom-weather.snowyIcyNight,
-#custom-weather.sunnyDay {
-	color: @white;
-	padding-right: 6px;
-	padding-left: 6px;
-}
-
-/*-----Indicators----*/
-#custom-hypridle.notactive,
-#idle_inhibitor.activated {
-	color: #39FF14;
-}
-
-#clock {
-	color: @white;
-    border-radius: 15px;
-}
-
-#custom-updates {
-    color: @yellow;
-}
-
-#custom-swaync{
-    color: #ffd700;}
