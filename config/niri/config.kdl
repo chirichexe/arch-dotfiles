@@ -570,9 +570,7 @@ binds {
 
     // Fullscreen, maximize and floating
     Mod+Shift+F { fullscreen-window; }
-    // maximize-column only grows the column's width; this also fills its height
-    // in case the window is sharing the column with others (a vertical stack)
-    Mod+Ctrl+F  { spawn-sh "$HOME/.config/hypr/scripts/NiriMaximizeFill.py"; }
+    Mod+Ctrl+F  { maximize-column; }
     Mod+M       { maximize-window-to-edges; }
     Mod+SPACE   { toggle-window-floating; }
     Mod+V       { toggle-window-floating; }
