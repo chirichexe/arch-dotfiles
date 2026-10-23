@@ -4,6 +4,7 @@ import os
 import re
 import sys
 import subprocess
+import time
 
 def get_window_icon(app_id, title):
     app_id = app_id or ""
@@ -151,15 +152,22 @@ def main():
     if not os.environ.get("NIRI_SOCKET"):
         return
 
-    try:
-        proc = subprocess.Popen(["niri", "msg", "--json", "event-stream"],
-                                stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
-    except Exception:
-        sys.exit(0)
+    # The event-stream connection can drop (niri reload, socket hiccup, suspend/resume);
+    # reconnect instead of letting the daemon die and leave the indicators stuck.
+    while True:
+        try:
+            proc = subprocess.Popen(["niri", "msg", "--json", "event-stream"],
+                                    stdout=subprocess.PIPE, stderr=subprocess.DEVNULL, text=True)
+        except Exception:
+            time.sleep(2)
+            continue
 
-    write_states()
-    for _ in proc.stdout:
         write_states()
+        for _ in proc.stdout:
+            write_states()
+
+        proc.wait()
+        time.sleep(1)
 
 
 if __name__ == "__main__":
